@@ -1,5 +1,5 @@
 /* logo: built in (always loads). Click it to set your own, saved in this browser. */
-(function(){var img=$('logoImg'),fb=$('logoFb'),box=$('logoBox'),inp=$('logoIn'),DEF="assets/logo.jpg";
+(function(){var img=$('logoImg'),fb=$('logoFb'),box=$('logoBox'),inp=$('logoIn'),DEF="logo.jpg";
 function show(ok){img.style.display=ok?'block':'none';fb.style.display=ok?'none':'block';box.className='logo'+(ok?' has':'')}
 function setSrc(u){img.src=u;try{window.dispatchEvent(new Event('nts-logo'))}catch(err){}}
 img.onload=function(){show(true);try{window.dispatchEvent(new Event('nts-logo'))}catch(err){}};img.onerror=function(){if(img.src!==DEF&&img.getAttribute('data-def')!=='1'){img.setAttribute('data-def','1');img.src=DEF}else show(false)};
