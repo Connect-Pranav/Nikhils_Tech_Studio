@@ -18,6 +18,7 @@
 <link rel="stylesheet" href="glass.css">
 <link rel="stylesheet" href="prism.css">
 <link rel="stylesheet" href="prism-style.css">
+<link rel="stylesheet" href="topbar.css">
 <link rel="stylesheet" href="splash.css">
 </head>
 <body>
@@ -62,7 +63,53 @@
   </div>
 </aside>
 <div class="mainc">
-  <header class="hd" id="hd"><div class="hd2" id="nav"></div></header>
+  <header class="hd" id="hd">
+    <div class="hd1">
+      <div class="hd-left"></div>
+      <div class="hd-center" id="nav"></div>
+      <div class="hd-right">
+        <div class="search-bar" id="topSearchBar">
+          <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+          <input type="text" id="topSearch" placeholder="Search or run command..." autocomplete="off">
+        </div>
+        <button class="notif-bell" id="topNotifBell" aria-label="Notifications">
+          <i class="ph ph-bell" aria-hidden="true"></i>
+          <span class="notif-badge" id="notifBadge"></span>
+        </button>
+        <div class="user-info" id="topUserBtn">
+          <div class="user-avatar" id="topUserAvatar">U</div>
+          <div class="user-name" id="topUserName">User</div>
+        </div>
+        <div class="connection-status" id="connStatus">Connection Missing</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hello/Welcome Section -->
+  <div class="hello-section" id="helloSection" style="display:none">
+    <div class="hello-header">
+      <div class="hello-greeting" id="helloGreeting">Good morning, User</div>
+      <div class="hello-connection" id="helloConnection">
+        <i class="ph ph-cloud-check" aria-hidden="true"></i>
+        Connection Missing
+      </div>
+    </div>
+    <div class="hello-meta">
+      <div class="hello-meta-item">
+        <div class="hello-meta-label">Accessing as</div>
+        <div class="hello-meta-value" id="helloUserName">User</div>
+      </div>
+      <div class="hello-meta-item">
+        <div class="hello-meta-label">Session started</div>
+        <div class="hello-meta-value" id="helloSessionTime">Just now</div>
+      </div>
+      <div class="hello-meta-item">
+        <div class="hello-meta-label">Last sync</div>
+        <div class="hello-meta-value" id="helloLastSync">Local mode</div>
+      </div>
+    </div>
+  </div>
+
   <main id="view" tabindex="-1"></main>
 </div>
 </div>
@@ -74,6 +121,7 @@
 <input type="file" id="logoIn" accept="image/*" hidden>
 
 <script src="splash.js"></script>
+<script src="topbar.js"></script>
 <script src="data.js"></script>
 <script src="ui.js"></script>
 <script src="views.js"></script>
