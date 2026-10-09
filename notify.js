@@ -134,3 +134,15 @@ setTimeout(rqStart,0);
   $('cxBtn').addEventListener('click',function(){rqConnectModal();var s=$('side');if(s&&s.classList)s.classList.remove('open')});
   rqOn(upd);upd();setInterval(upd,5000);
 })();
+
+/* ---- Header tools (top right): search pill + who is using this device, before the bell ---- */
+(function(){
+  var hd=$('hd'),bell=$('bellH');if(!hd||!bell||$('hdTools'))return;
+  var w=document.createElement('div');w.id='hdTools';w.className='hdt';
+  w.innerHTML='<button type="button" class="hds" id="hdSrch" aria-label="Search or run a command"><i class="ph ph-magnifying-glass" aria-hidden="true"></i><span>Search...</span><kbd>Ctrl K</kbd></button><button type="button" class="hdu" id="hdUser" aria-label="Who is using this device. Open connection settings"><span class="hdav" id="hdAv">?</span><span class="hdn" id="hdNm">Not connected</span></button>';
+  hd.insertBefore(w,bell);
+  $('hdSrch').addEventListener('click',function(){if(typeof openPal==='function')openPal()});
+  $('hdUser').addEventListener('click',function(){if(typeof rqConnectModal==='function')rqConnectModal()});
+  function upd(){var n=rqReady()?RQ.cfg.who:'',a=$('hdAv'),m=$('hdNm');if(!a)return;a.textContent=n?n.charAt(0).toUpperCase():'?';m.textContent=n||'Not connected';$('hdUser').className='hdu'+(n?'':' warn')}
+  rqOn(upd);upd();setInterval(upd,4000);
+})();
