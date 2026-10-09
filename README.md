@@ -1,13 +1,4 @@
-# NIKHILs TECH STUDIO OS
 
-Static site, no build step. Upload every file and folder in this repo to the root, keeping the structure:
-
-```
-index.html
-css/  icons.css  style.css  ninja.css
-js/   (scripts load in the order listed in index.html)
-assets/logo.jpg
-```
-
-GitHub Pages: Settings, Pages, Source = Deploy from a branch, main, / (root).
-All data is saved in the browser on each device. Google Sheet sync is paused (SHEETS_ON=false in js/data.js).
+## Shared requests, estimated cost and notifications
+Files: shared.js (sync engine), requests.js (page), notify.js (bell, panel, Dal Abba bubble), requests.css, and /Code.gs (Apps Script backend).
+Setup: paste Code.gs into your Apps Script project, set Script property TEAM_KEY, deploy as Web app (Execute as: Me, Who has access: Anyone), then on each device open Requests > Connect and enter the /exec URL, the team key and who you are.

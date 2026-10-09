@@ -7,7 +7,7 @@ var COMMANDS=[
  ['Show Pranav tasks','Tasks',function(){state.taskTab='pending';state.owner='Pranav';go('tasks')}],
  ['Show 100 video objective','Objectives',function(){go('objectives')}],
  ['Open requests','Navigate',function(){go('requests')}],
- ['Raise a request','Create',function(){go('requests');setTimeout(function(){var e=$('rq_title');if(e)e.focus()},450)}],
+ ['Raise a request','Create',function(){rqOpenForm()}],
  ['Upload daily work','Create',function(){go('uploads')}],
  ['Open AI models','Navigate',function(){go('models')}],
  ['Open AI voice studio','Navigate',function(){go('voice')}],

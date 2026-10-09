@@ -84,7 +84,7 @@ function ivTbl(head,rows,empty){
   for(i=0;i<head.length;i++){n=head[i].charAt(0)==='#';h+='<th'+(n?' class="r"':'')+'>'+esc(n?head[i].slice(1):head[i])+'</th>'}
   h+='</tr></thead><tbody>';
   if(!rows.length)h+='<tr><td colspan="'+head.length+'" class="ivem">'+empty+'</td></tr>';
-  for(i=0;i<rows.length;i++){h+='<tr'+(rows[i].tr?' '+rows[i].tr:'')+'>';for(j=0;j<head.length;j++){h+='<td'+(head[j].charAt(0)==='#'?' class="r"':'')+'>'+rows[i].c[j]+'</td>'}h+='</tr>'}
+  for(i=0;i<rows.length;i++){h+='<tr'+(rows[i].tr?' '+rows[i].tr:'')+'>';for(j=0;j<head.length;j++){h+='<td'+(head[j].charAt(0)==='#'?' class="r"':'')+' data-l="'+esc(head[j].charAt(0)==='#'?head[j].slice(1):head[j])+'">'+rows[i].c[j]+'</td>'}h+='</tr>'}
   return h+'</tbody></table></div>';
 }
 function ivBtn(label,act,cls){return '<button class="btn sm '+(cls||'g')+'" data-iv="'+act+'">'+label+'</button>'}
@@ -229,7 +229,17 @@ function ivNames(){var a=[],k;for(k in INV.items)a.push(INV.items[k].name);retur
 function ivVendNames(){var a=[],k,s={},i;for(k in INV.vendors){a.push(INV.vendors[k].name);s[k]=1}for(i=0;i<INV.purchases.length;i++){k=INV.purchases[i].vendor;if(k&&!s[k.toLowerCase()]){s[k.toLowerCase()]=1;a.push(k)}}return a}
 function ivFi(label,id,type,val,ph,extra){return fld(label,id,'<input id="'+id+'" type="'+type+'" value="'+esc(val||'')+'" placeholder="'+esc(ph||'')+'" autocomplete="off"'+(extra||'')+'>')}
 function ivFs(label,id,list,sel){return fld(label,id,'<select id="'+id+'">'+ivOpts(list,sel)+'</select>')}
-function ivErr(list){var e=$('iv_err');if(e){e.innerHTML=list.length?'<b>Please fix:</b><ul><li>'+list.map(esc).join('</li><li>')+'</li></ul>':'';e.style.display=list.length?'block':'none';if(list.length&&e.scrollIntoView)e.scrollIntoView({block:'nearest'})}return list.length===0}
+var IV_FM=[['Purchase date','iv_date'],['Sale date','iv_date'],['Date is','iv_date'],['Item name','iv_item'],['Choose an item','iv_item'],['Quantity','iv_qty'],['Only ','iv_qty'],['unit price','iv_price'],['GST','iv_tax'],['Discount','iv_disc'],['partial','iv_paid'],['Valid till','iv_vtill'],['Warranty end','iv_we'],['Expiry','iv_exp'],['reason','iv_reason'],['purpose','iv_purpose'],['Vendor name','iv_vn'],['vendor with','iv_vn'],['Reorder','iv_ro']];
+function ivErr(list){
+  var e=$('iv_err'),i,j,old=document.querySelectorAll('#mod .fe,#mod .bad'),f,m,fl;
+  for(i=0;i<old.length;i++){if(old[i].className==='fe')old[i].parentNode.removeChild(old[i]);else old[i].className=old[i].className.replace(/\s*\bbad\b/g,'')}
+  if(e){e.innerHTML=list.length?'<b>Please fix '+list.length+' thing'+(list.length>1?'s':'')+' above.</b>':'';e.style.display=list.length?'block':'none'}
+  var first=null;
+  for(i=0;i<list.length;i++){for(j=0;j<IV_FM.length;j++){if(list[i].indexOf(IV_FM[j][0])>-1){f=$(IV_FM[j][1]);if(f&&f.parentNode&&f.parentNode.querySelector&&!f.parentNode.querySelector('.fe')){f.className+=' bad';f.setAttribute('aria-invalid','true');m=document.createElement('div');m.className='fe';m.setAttribute('role','alert');m.textContent=list[i];f.parentNode.appendChild(m);if(!first)first=f}break}}}
+  if(first){try{first.focus();first.scrollIntoView({block:'center'})}catch(err){}}
+  else if(list.length&&e&&e.scrollIntoView)e.scrollIntoView({block:'nearest'});
+  return list.length===0;
+}
 function ivV(id){var e=$(id);return e?String(e.value).trim():''}
 function ivN(id){var v=parseFloat(ivV(id));return isNaN(v)?0:v}
 function ivModal(title,body,saveAct,saveLabel,wide){
@@ -405,7 +415,7 @@ function ivDelete(kind,id){
 }
 function ivAct(a){
   var p=a.split('|'),x=p[0],i;
-  if(x==='tab'){IVS.tab=p[1];IVS.q='';render(true);window.scrollTo(0,0)}
+  if(x==='tab'){IVS.tab=p[1];IVS.q='';if(state.page!=='inventory')go('inventory');else{render(true);window.scrollTo(0,0)}}
   else if(x==='newPur')ivPurForm('stock');
   else if(x==='newAsset')ivPurForm('asset');
   else if(x==='savePur')ivSavePur();
@@ -449,7 +459,7 @@ document.addEventListener('click',function(e){
 });
 document.addEventListener('input',function(e){
   var t=e.target;if(!t||!t.id)return;
-  if(t.id==='iv_q'){IVS.q=t.value;var pos=t.selectionStart;render(true);var q=$('iv_q');if(q){q.focus();try{q.setSelectionRange(pos,pos)}catch(err){}}}
+  if(t.id==='iv_q'&&state.page==='inventory'){IVS.q=t.value;var pos=t.selectionStart;render(true);var q=$('iv_q');if(q){q.focus();try{q.setSelectionRange(pos,pos)}catch(err){}}}
   else if(t.id==='iv_qty'||t.id==='iv_price'||t.id==='iv_tax'||t.id==='iv_disc')ivCalcPv();
 });
 document.addEventListener('change',function(e){

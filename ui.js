@@ -10,6 +10,11 @@ var GROUPS=[['Home','house',['command']],['Work','check-square',['tasks','reques
 var state={page:'command',founder:false,cb:'assign',taskTab:'pending',owner:'All',status:'All',when:'any',reqTab:'ALL',upTab:'ALL',crTab:'ALL',open:{},fresh:null,last:{}};
 function groupOf(p){var i;for(i=0;i<GROUPS.length;i++){if(GROUPS[i][2].indexOf(p)>-1)return i}return 0}
 var SNC=[['#86bbff','#4f8fe8'],['#74d9c6','#3aa795'],['#aea0f6','#7a68db'],['#f4b887','#df8a4c'],['#86dc98','#44a860'],['#f299b8','#d65e8a'],['#85c9ee','#4a9bc9']];
+function tabsetFor(p){
+  if(p==='inventory'&&typeof IV_TABS!=='undefined')return {t:IV_TABS,c:IVS.tab,a:'data-iv',ic:{overview:'squares-four',purchases:'files',sales:'currency-inr',stock:'cube',moves:'arrows-clockwise',assets:'stack',expiry:'clock',vendors:'users',reports:'chart-line-up'}};
+  if(p==='social'&&typeof SOC_TABS!=='undefined')return {t:SOC_TABS,c:SS.tab,a:'data-sc',ic:{overview:'squares-four',accounts:'users',content:'film-strip',audience:'chart-line-up',insights:'sparkle',research:'magnifying-glass',leads:'users-three',reports:'files',settings:'command'}};
+  return null;
+}
 function renderNav(){
   var gi=groupOf(state.page),h='<div class="seg1">',i,pg;
   for(i=0;i<GROUPS.length;i++){h+='<button class="gb'+(i===gi?' on':'')+'" data-g="'+i+'"><span class="it" style="--h1:'+SNC[i%SNC.length][0]+';--h2:'+SNC[i%SNC.length][1]+'">'+ico(GROUPS[i][1])+'</span><span>'+GROUPS[i][0]+'</span></button>'}
@@ -17,9 +22,19 @@ function renderNav(){
   if(pg.length>1){h+='<div class="seg2">';for(i=0;i<pg.length;i++){h+='<button class="sb'+(state.page===pg[i]?' on':'')+'" data-p="'+pg[i]+'">'+PAGES[pg[i]][0]+'</button>'}h+='</div>'}
   $('nav').innerHTML=h;
   var sn='<div class="sl">'+GROUPS[gi][0]+'</div>',c=SNC[gi%SNC.length],st='style="--h1:'+c[0]+';--h2:'+c[1]+'"',IC={overview:'squares-four',purchases:'files',sales:'currency-inr',stock:'cube',moves:'arrows-clockwise',assets:'stack',expiry:'clock',vendors:'users',reports:'chart-line-up'},j;
-  if(pg[0]==='inventory'&&typeof IV_TABS!=='undefined'){for(j=0;j<IV_TABS.length;j++){sn+='<button class="sn'+(IVS.tab===IV_TABS[j][0]?' on':'')+'" data-iv="tab|'+IV_TABS[j][0]+'"><span class="it" '+st+'>'+ico(IC[IV_TABS[j][0]]||'cube')+'</span><span>'+IV_TABS[j][1]+'</span></button>'}}
+  var ts=pg.length===1?tabsetFor(pg[0]):null;
+  if(ts){for(j=0;j<ts.t.length;j++){sn+='<button class="sn'+(ts.c===ts.t[j][0]?' on':'')+'" '+ts.a+'="tab|'+ts.t[j][0]+'"><span class="it" '+st+'>'+ico(ts.ic[ts.t[j][0]]||'cube')+'</span><span>'+ts.t[j][1]+'</span></button>'}}
   else{for(j=0;j<pg.length;j++){sn+='<button class="sn'+(state.page===pg[j]?' on':'')+'" data-p="'+pg[j]+'"><span class="it" '+st+'>'+ico(PAGES[pg[j]][1])+'</span><span>'+PAGES[pg[j]][0]+'</span></button>'}}
   var sv=$('snav');if(sv){sv.innerHTML=sn;var on=sv.querySelector('.on');if(on&&sv.clientHeight&&(on.offsetTop+on.offsetHeight>sv.scrollTop+sv.clientHeight||on.offsetTop<sv.scrollTop))sv.scrollTop=Math.max(0,on.offsetTop-sv.clientHeight/2)}
+  var dn='',d,dg,k2;
+  for(d=0;d<GROUPS.length;d++){dg=GROUPS[d];var op=(state.dopen&&state.dopen[d]!==undefined)?state.dopen[d]:(d===gi),cc=SNC[d%SNC.length],sty='style="--h1:'+cc[0]+';--h2:'+cc[1]+'"',dts=dg[2].length===1?tabsetFor(dg[2][0]):null,one=dg[2].length===1&&!dts;
+    if(one){dn+='<button class="dg dn'+(state.page===dg[2][0]?' on':'')+'" data-p="'+dg[2][0]+'"><span class="it" '+sty+'>'+ico(dg[1])+'</span><span class="dl">'+dg[0]+'</span></button>';continue}
+    dn+='<button class="dg'+(d===gi?' cur':'')+'" data-dg="'+d+'" aria-expanded="'+(op?'true':'false')+'"><span class="it" '+sty+'>'+ico(dg[1])+'</span><span class="dl">'+dg[0]+'</span><i class="ph ph-caret-down car" aria-hidden="true"></i></button><div class="dsub'+(op?' open':'')+'">';
+    if(dts){for(k2=0;k2<dts.t.length;k2++){dn+='<button class="dn'+(state.page===dg[2][0]&&dts.c===dts.t[k2][0]?' on':'')+'" '+dts.a+'="tab|'+dts.t[k2][0]+'">'+dts.t[k2][1]+'</button>'}}
+    else{for(k2=0;k2<dg[2].length;k2++){dn+='<button class="dn'+(state.page===dg[2][k2]?' on':'')+'" data-p="'+dg[2][k2]+'">'+PAGES[dg[2][k2]][0]+'</button>'}}
+    dn+='</div>'}
+  if($('dnav'))$('dnav').innerHTML=dn;
+  if($('mTtl'))$('mTtl').textContent=(PAGES[state.page]||['NIKHILs TECH STUDIO'])[0];
   var bm=[['command','Home','house'],['tasks','Tasks','check-square'],['requests','Requests','paper-plane-tilt'],['uploads','Uploads','upload-simple'],['more','More','dots-three']],b='';
   for(i=0;i<bm.length;i++){b+='<button data-p="'+bm[i][0]+'" class="'+(state.page===bm[i][0]?'on':'')+'">'+ico(bm[i][2])+'<span>'+bm[i][1]+'</span></button>'}
   $('bnav').innerHTML=b;

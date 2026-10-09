@@ -402,7 +402,7 @@ function render(keep){
   renderNav();renderSide();
   $('sync').textContent=syncText();$('cnBtn').textContent=CFG.SCRIPT_URL?'Change connection':'Connect sheet';
   var fb=$('fvBtn');fb.className='fvb'+(state.founder?' on':'');fb.setAttribute('aria-pressed',state.founder?'true':'false');
-  $('bdot').style.display=(openCount()||cnt(T(),isOverdue))?'block':'none';
+  ntBadge();
   playIn(v,!keep);hydrateLocal(v);
   if(state.page==='voice'){drawWave('wvIn',voice.buf);drawWave('wvOut',voice.out)}
   if(state.fresh){var f=v.querySelector('[data-id="'+state.fresh+'"]');if(f&&G&&!RM){G.from(f,{opacity:0,y:-10,duration:.5,ease:'power3.out',clearProps:'transform,opacity'})}state.fresh=null}

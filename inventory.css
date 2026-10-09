@@ -37,3 +37,10 @@
 .ivform{max-height:none}
 @media (max-width:820px){.ivq{min-width:0;flex:1}.ivt table{font-size:12px}}
 @media (prefers-reduced-motion:reduce){.ivt tbody tr{transition:none}}
+
+/* Social module */
+.socch{width:100%;overflow:hidden}.socch svg{width:100%;height:auto;display:block;color:var(--tx)}
+.soclegs{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:6px}.socleg{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:var(--mu)}.socleg i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.socgr{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.socrep h4{font-size:13px;margin:14px 0 4px;font-weight:650}.socrep ul{margin:0 0 0 18px;padding:0;line-height:1.55;font-size:12.5px}
+.socf .ivq{min-width:140px}

@@ -44,7 +44,6 @@ document.addEventListener('click',function(e){
     editItem(eid,fv);closeMod();toast('Saved');render(true);return}
   if(t.closest('#cnSave')){var cu=$('cn_url').value.trim();if(cu&&!/^https:\/\/script\.google\.com\/macros\/s\/[-\w]+\/exec$/.test(cu)){toast('That does not look like a Web app URL ending in /exec');return}try{if(cu)localStorage.setItem('nts_script',cu);else localStorage.removeItem('nts_script')}catch(err){}CFG.SCRIPT_URL=cu;ig.data=null;closeMod();toast(cu?'Connected. Syncing...':'Disconnected, using this device only');lastWrite=0;loadItems(function(){render(true)});render(true);return}
   if(t.closest('#igRef')){igRefresh();return}
-  if(t.closest('#nBtn')){toast(openCount()+' open requests, '+pendCount()+' pending tasks');return}
   if(t.closest('#fvBtn')){state.founder=!state.founder;state.page='command';render();return}
   if(t.closest('#thBtn')){var cur=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light';document.documentElement.setAttribute('data-theme',cur);try{localStorage.setItem('nts_theme',cur)}catch(err){}themeIcon();if(state.page==='voice')render(true);return}
   if(t===$('ov'))closePal();if(t===$('mov'))closeMod();
