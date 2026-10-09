@@ -25,14 +25,13 @@
 <canvas id="fx" aria-hidden="true"></canvas><div id="glow" aria-hidden="true"></div>
 <div id="splash" role="status" aria-label="Welcome screen">
   <div class="splash-content">
+    <div class="splash-logo" id="splashLogo">N</div>
     <h1 class="splash-title">Welcome</h1>
     <p class="splash-subtitle" id="splashGreeting">Starting your studio session...</p>
-    <div class="splash-nav">
-      <span class="splash-tag"><i class="ph ph-sparkle" aria-hidden="true"></i>Prism</span>
-    </div>
+    <div class="splash-tag"><i class="ph ph-sparkle" aria-hidden="true"></i>Prism</div>
     <div class="splash-buttons">
-      <button class="splash-btn" id="splashEnter">Enter studio<i class="ph ph-arrow-up-right" aria-hidden="true"></i></button>
-      <button class="splash-btn secondary" id="splashSettings">Settings<i class="ph ph-gear" aria-hidden="true"></i></button>
+      <button class="splash-btn" id="splashConnect">Connect Backend<i class="ph ph-arrow-up-right" aria-hidden="true"></i></button>
+      <button class="splash-btn secondary" id="splashGuest">Guest Access<i class="ph ph-user" aria-hidden="true"></i></button>
     </div>
     <div class="splash-progress"><i></i></div>
     <div class="splash-hint">Press any key or tap to continue</div>
@@ -70,45 +69,17 @@
       <div class="hd-right">
         <div class="search-bar" id="topSearchBar">
           <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
-          <input type="text" id="topSearch" placeholder="Search or run command..." autocomplete="off">
+          <input type="text" id="topSearch" placeholder="Search..." autocomplete="off">
         </div>
         <button class="notif-bell" id="topNotifBell" aria-label="Notifications">
           <i class="ph ph-bell" aria-hidden="true"></i>
           <span class="notif-badge" id="notifBadge"></span>
         </button>
-        <div class="user-info" id="topUserBtn">
-          <div class="user-avatar" id="topUserAvatar">U</div>
-          <div class="user-name" id="topUserName">User</div>
-        </div>
-        <div class="connection-status" id="connStatus">Connection Missing</div>
+        <div class="connection-status" id="connStatus" title="Click to connect"></div>
+        <div class="user-name" id="topUserName">User</div>
       </div>
     </div>
   </header>
-
-  <!-- Hello/Welcome Section -->
-  <div class="hello-section" id="helloSection" style="display:none">
-    <div class="hello-header">
-      <div class="hello-greeting" id="helloGreeting">Good morning, User</div>
-      <div class="hello-connection" id="helloConnection">
-        <i class="ph ph-cloud-check" aria-hidden="true"></i>
-        Connection Missing
-      </div>
-    </div>
-    <div class="hello-meta">
-      <div class="hello-meta-item">
-        <div class="hello-meta-label">Accessing as</div>
-        <div class="hello-meta-value" id="helloUserName">User</div>
-      </div>
-      <div class="hello-meta-item">
-        <div class="hello-meta-label">Session started</div>
-        <div class="hello-meta-value" id="helloSessionTime">Just now</div>
-      </div>
-      <div class="hello-meta-item">
-        <div class="hello-meta-label">Last sync</div>
-        <div class="hello-meta-value" id="helloLastSync">Local mode</div>
-      </div>
-    </div>
-  </div>
 
   <main id="view" tabindex="-1"></main>
 </div>

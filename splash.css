@@ -1,5 +1,4 @@
-/* Welcome splash: Prism-inspired hero with layered botanical glow and glass pills
-   Appears once per session, auto-closes after ~4.4s, can skip via tap/key, removes from DOM when done */
+/* Welcome splash: Prism-inspired hero with spinning logo */
 
 #splash{
   position:fixed;inset:0;z-index:100;
@@ -14,7 +13,7 @@
 #splash.exit{animation:splashExit .4s cubic-bezier(.4,0,1,1) forwards;pointer-events:none}
 @keyframes splashExit{to{opacity:0;transform:translateY(20px)}}
 
-/* Layered botanical glow backdrop: richer, deeper foliage effect */
+/* Layered botanical glow backdrop */
 #splash::before,#splash::after{
   content:"";position:absolute;z-index:-1;pointer-events:none;border-radius:50%;filter:blur(80px)
 }
@@ -46,11 +45,11 @@
   #splash::before,#splash::after{animation:none}
 }
 
-/* Content container: centered, constrained */
+/* Content container */
 #splash .splash-content{
   position:relative;z-index:1;
   text-align:center;
-  max-width:640px;
+  max-width:520px;
   padding:0 clamp(20px,5vw,60px);
   animation:contentSlide .6s cubic-bezier(.34,.69,.42,.98) .1s forwards;
   opacity:0
@@ -61,47 +60,70 @@
   to{opacity:1;transform:translateY(0)}
 }
 
-/* Headline: gradient text inspired by glass theme */
+/* Spinning logo */
+.splash-logo{
+  width:120px;
+  height:120px;
+  margin:0 auto 24px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#4f8fe6,#00d4ff);
+  display:grid;
+  place-items:center;
+  font-weight:700;
+  font-size:56px;
+  color:#fff;
+  box-shadow:0 0 0 1px rgba(255,255,255,.1),0 20px 60px rgba(79,143,230,.3);
+  animation:spinLogo 3s linear infinite;
+  position:relative;
+  overflow:hidden
+}
+
+@keyframes spinLogo{
+  from{transform:rotate(0deg)}
+  to{transform:rotate(360deg)}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .splash-logo{animation:none}
+}
+
+.splash-logo::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.3),transparent 60%);
+  animation:shimmer 2s ease-in-out infinite
+}
+
+@keyframes shimmer{
+  0%,100%{opacity:0}
+  50%{opacity:1}
+}
+
+/* Headline */
 #splash .splash-title{
   font-size:clamp(28px,6vw,52px);
   font-weight:700;
   letter-spacing:-.04em;
   line-height:1.1;
-  margin:0 0 8px;
+  margin:0 0 12px;
   background:var(--ttl);
   -webkit-background-clip:text;background-clip:text;
   -webkit-text-fill-color:transparent;
   color:transparent
 }
 
-/* Subtitle/greeting */
+/* Subtitle */
 #splash .splash-subtitle{
   font-size:clamp(13px,2.2vw,16px);
   color:var(--mu);
   line-height:1.5;
-  margin:0 0 32px;
+  margin:0 0 28px;
   font-weight:500;
   letter-spacing:-.01em
 }
 
-/* Pill-style navigation bar: glass + frosted effect */
-.splash-nav{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:12px;
-  margin-bottom:24px;
-  flex-wrap:wrap;
-  animation:navSlide .6s cubic-bezier(.34,.69,.42,.98) .2s forwards;
-  opacity:0
-}
-
-@keyframes navSlide{
-  from{opacity:0;transform:translateY(-16px)}
-  to{opacity:1;transform:translateY(0)}
-}
-
-/* Tag chip: smaller pill in the nav */
+/* Tag chip */
 .splash-tag{
   display:inline-flex;
   align-items:center;
@@ -116,17 +138,11 @@
   background:linear-gradient(145deg,rgba(255,255,255,.12),rgba(255,255,255,.04));
   border:1px solid rgba(255,255,255,.15);
   -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 8px 24px rgba(0,0,0,.2)
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 8px 24px rgba(0,0,0,.2);
+  margin-bottom:24px
 }
 
-[data-theme="light"] .splash-tag{
-  color:var(--ac);
-  background:linear-gradient(145deg,rgba(255,255,255,.8),rgba(255,255,255,.5));
-  border-color:rgba(60,90,130,.15);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,1),0 4px 12px rgba(50,80,120,.08)
-}
-
-/* Button group: primary + secondary */
+/* Buttons */
 .splash-buttons{
   display:flex;
   align-items:center;
@@ -143,7 +159,6 @@
   to{opacity:1;transform:translateY(0)}
 }
 
-/* Primary button: pill-shaped, gradient, glass layer */
 .splash-btn{
   display:inline-flex;
   align-items:center;
@@ -190,26 +205,7 @@
   box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 8px 20px rgba(0,0,0,.2)
 }
 
-[data-theme="light"] .splash-btn{
-  background:linear-gradient(180deg,#5b9bf0,#3f7fdb);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 8px 20px rgba(63,127,219,.2);
-  color:#fff
-}
-
-[data-theme="light"] .splash-btn.secondary{
-  background:rgba(255,255,255,.8);
-  color:#1d4f9f;
-  border-color:rgba(60,90,130,.15);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,1),0 4px 12px rgba(50,80,120,.1)
-}
-
-[data-theme="light"] .splash-btn.secondary:hover{
-  background:#fff;
-  border-color:rgba(60,90,130,.25);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,1),0 6px 16px rgba(50,80,120,.15)
-}
-
-/* Progress line: subtle entrance progress */
+/* Progress line */
 .splash-progress{
   height:3px;
   max-width:200px;
@@ -237,7 +233,7 @@
 
 @keyframes progressFill{to{width:100%}}
 
-/* Keyboard hint and close instructions */
+/* Hint */
 .splash-hint{
   font-size:11px;
   color:var(--mu);
@@ -249,26 +245,13 @@
 
 @keyframes hintFade{from{opacity:0}to{opacity:.7}}
 
-/* Responsive: stack on mobile, adjust spacing */
+/* Responsive */
 @media (max-width:520px){
   #splash .splash-title{font-size:clamp(24px,5vw,40px)}
-
-  .splash-buttons{
-    flex-direction:column;
-    width:100%;
-    gap:10px
-  }
-
-  .splash-btn{
-    width:100%;
-    min-height:46px;
-    font-size:12px
-  }
-
+  .splash-buttons{flex-direction:column;width:100%;gap:10px}
+  .splash-btn{width:100%;min-height:46px;font-size:12px}
   .splash-progress{max-width:160px}
-
   .splash-hint{font-size:10px}
+  .splash-logo{width:100px;height:100px;font-size:48px}
 }
 
-/* Ensure no layout shift when splash exits */
-#splash.exit ~*{pointer-events:auto}
