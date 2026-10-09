@@ -19,7 +19,7 @@ function rqSyncBar(){
   return '<div class="rqbar" role="status"><span class="tg '+c+'" id="rqSyncTxt">'+esc(rqSyncText())+'</span>'+(RQ.err&&RQ.state!=='ok'?'<span class="mu sm"> '+esc(RQ.err)+'</span>':'')+(RQ.fromCache?'<span class="mu sm"> Showing the last saved copy until the server answers.</span>':'')+(rqReady()?'<button class="btn sm g" data-rq="refresh">'+ico('arrows-clockwise')+'Refresh</button>':'')+'<button class="btn sm g" data-rq="connect">'+ico('link')+(rqReady()?'Connection':'Connect')+'</button></div>';
 }
 function rqConnectCard(){
-  return '<div class="card" data-a><div class="h3">Connect shared requests</div><div class="mu mt8" style="line-height:1.6">Requests are stored in one central Google Sheet through your Apps Script, so they look the same on your phone, laptop and everyone else\'s device. This device is not connected yet, so requests cannot be raised or read.</div><div class="mt16"><button class="btn" data-rq="connect">'+ico('link')+'Connect this device</button></div></div>';
+  return '<div class="card" data-a><div class="h3">Start using requests</div><div class="mu mt8" style="line-height:1.6">Pick who you are on this device. In <b>this-device mode</b> everything works right away (estimated cost, comments, notifications), but the data stays only in this browser, so your phone and laptop will not see each other\'s requests.</div><div class="frow mt16" style="align-items:end">'+fld('I am','rql_who0',tsel('rql_who0',PEOPLE,'Pranav'))+'<button class="btn" data-rq="uselocal0">'+ico('check-square')+'Use on this device</button></div><div class="mu sm mt16">To share one list across devices, connect the Google Sheet backend instead:</div><div class="mt8"><button class="btn g" data-rq="connect">'+ico('link')+'Connect shared backend</button></div></div>';
 }
 function rqVisible(){
   var o=[],i,r,q=RV.q.toLowerCase();
@@ -179,7 +179,7 @@ function rqComment(){
 
 /* ---- connect this device ---- */
 function rqConnectModal(){
-  openMod('<div class="h3" style="margin-bottom:6px">Connect shared requests</div><div class="mu sm" style="line-height:1.6;margin-bottom:16px">Paste the Apps Script web-app URL and the team key you set in Script properties. They are stored only in this browser. The team key is never part of the website files.</div><div class="stack">'+
+  openMod('<div class="h3" style="margin-bottom:6px">Requests connection</div><div class="card" style="margin-bottom:16px;padding:14px"><div class="lbl">This device only</div><div class="frow mt8" style="align-items:end">'+fld('I am','rql_who',tsel('rql_who',PEOPLE,RQ.cfg.who||'Pranav'))+'<button class="btn sm" data-rq="uselocal">'+(RQ.cfg.local&&!rqShared()?'Switch person':'Use on this device')+'</button></div><div class="mu sm mt8">Data stays in this browser only.</div></div><div class="lbl" style="margin-bottom:6px">Or share across devices (Google Sheet)</div><div class="mu sm" style="line-height:1.6;margin-bottom:16px">Paste the Apps Script web-app URL and the team key you set in Script properties. They are stored only in this browser. The team key is never part of the website files.</div><div class="stack">'+
    fld('Web-app URL','rqk_url',tin('rqk_url','https://script.google.com/macros/s/.../exec','url',RQ.cfg.url))+
    fld('Team key','rqk_key','<input id="rqk_key" type="password" autocomplete="off" value="'+esc(RQ.cfg.key)+'">')+
    fld('Who is using this device?','rqk_who',tsel('rqk_who',[['','Choose...']].concat(PEOPLE.map(function(p){return [p,p]})),RQ.cfg.who))+
@@ -194,7 +194,7 @@ function rqSaveConn(){
   var b=$('rqk_go');b.disabled=true;b.textContent='Testing...';
   rqCall('rq_sync',{}).then(function(r){
     b.disabled=false;b.textContent='Test and save';
-    if(r&&r.ok){rqSaveCfg();RQ.reqs=r.requests;RQ.act=r.activity;RQ.nts=r.notifications;RQ.last=Date.now();RQ.state='ok';RQ.err='';RQ.fromCache=false;rqSaveCache();closeMod();toast('Connected as '+w);rqStart();render(true);return}
+    if(r&&r.ok){RQ.cfg.local=false;rqSaveCfg();RQ.reqs=r.requests;RQ.act=r.activity;RQ.nts=r.notifications;RQ.last=Date.now();RQ.state='ok';RQ.err='';RQ.fromCache=false;rqSaveCache();closeMod();toast('Connected as '+w);rqStart();render(true);return}
     RQ.cfg.url=old.u;RQ.cfg.key=old.k;RQ.cfg.who=old.w;er.textContent=rqErrText(r&&r.error);er.style.display='block';
   }).catch(function(e){b.disabled=false;b.textContent='Test and save';RQ.cfg.url=old.u;RQ.cfg.key=old.k;RQ.cfg.who=old.w;er.textContent=((e&&e.msg)||'Could not reach the URL.')+' Checking why...';er.style.display='block';
     fetch(u+(u.indexOf('?')>-1?'&':'?')+'probe=1').then(function(r){return r.text()}).then(function(){er.textContent='The URL can be read from this page, but the save request was refused or the script errored. Paste the latest Code.gs into Apps Script, then Deploy > Manage deployments > pencil > New version > Deploy, and try again.'}).catch(function(x){er.textContent='This page cannot read that URL at all ('+((x&&x.message)||'blocked')+'). Check the URL is complete, ends in /exec, and the deployment access is Anyone.'});
@@ -222,7 +222,8 @@ document.addEventListener('click',function(e){
   else if(a==='tab'){RV.tab=p[1];render(true)}else if(a==='view'){RV.view=p[1];render(true)}
   else if(a==='refresh'){rqSync().then(function(){render(true)})}
   else if(a==='connect')rqConnectModal();else if(a==='saveconn')rqSaveConn();
-  else if(a==='disconnect'){RQ.cfg.url=RQ.cfg.key='';RQ.cfg.who='';rqSaveCfg();RQ.reqs=[];RQ.act=[];RQ.nts=[];rqSaveCache();RQ.state='off';rqStart();closeMod();render(true);toast('Disconnected')}
+  else if(a==='uselocal'||a==='uselocal0'){var w=$(a==='uselocal'?'rql_who':'rql_who0').value;RQ.cfg.local=true;RQ.cfg.who=w;rqSaveCfg();RQ.reqs=[];RQ.act=[];RQ.nts=[];RQ.state='loading';closeMod();rqStart();toast('Using requests on this device as '+w);render(true)}
+  else if(a==='disconnect'){RQ.cfg.url=RQ.cfg.key='';RQ.cfg.who='';RQ.cfg.local=false;rqSaveCfg();RQ.reqs=[];RQ.act=[];RQ.nts=[];rqSaveCache();RQ.state='off';rqStart();closeMod();render(true);toast('Disconnected')}
   else if(a==='editcost')rqEditCost(p[1]);else if(a==='cancelcost'){$('rqCostEdit').innerHTML=''}
   else if(a==='savecost')rqSaveCost(p[1]);else if(a==='comment')rqComment();else if(a==='migrate')rqMigrate();
 });

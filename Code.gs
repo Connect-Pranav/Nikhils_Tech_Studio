@@ -15,9 +15,17 @@ var HEAD = ['id','type','title','detail','from','to','priority','status','due','
 
 function json_(o) { return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON); }
 
+/* tab lookup that ignores upper/lower case and stray spaces (getSheetByName is exact, insertSheet is not) */
+function byName_(ss, name) {
+  var s = ss.getSheetByName(name), a, i, k = String(name).toLowerCase().replace(/\s+/g, '');
+  if (s) { return s; }
+  a = ss.getSheets();
+  for (i = 0; i < a.length; i++) { if (a[i].getName().toLowerCase().replace(/\s+/g, '') === k) { return a[i]; } }
+  return null;
+}
 function sheet_() {
   var ss = SpreadsheetApp.openById(SHEET_ID);
-  var s = ss.getSheetByName(SHEET_NAME);
+  var s = byName_(ss, SHEET_NAME);
   if (!s) {
     s = ss.insertSheet(SHEET_NAME);
     s.appendRow(HEAD);
@@ -39,6 +47,18 @@ function addRow_(it) {
 }
 
 function doGet(e) {
+  /* fallback transport for browsers that block cross-site fetch: the page loads this as a <script> (JSONP). Same auth and rules as POST. */
+  if (e && e.parameter && e.parameter.cb) {
+    var cb = String(e.parameter.cb), out;
+    if (!/^[A-Za-z0-9_]{1,40}$/.test(cb)) { return json_({ ok: false, error: 'bad callback' }); }
+    try {
+      var pr = JSON.parse(e.parameter.d || '{}');
+      if (pr.action === 'ping') { out = { ok: true, ping: true }; }
+      else if (pr.action && /^(rq_|nt_)/.test(pr.action)) { out = shared_(pr); }
+      else { out = { ok: false, error: 'unknown action' }; }
+    } catch (err) { out = { ok: false, error: 'Server error: ' + String(err) }; }
+    return ContentService.createTextOutput(cb + '(' + JSON.stringify(out) + ');').setMimeType(ContentService.MimeType.JAVASCRIPT);
+  }
   if (e && e.parameter && e.parameter.what === 'instagram') { return json_(igRead_()); }
   var v = sheet_().getDataRange().getValues(), out = [], i, j;
   for (i = 1; i < v.length; i++) {
@@ -51,7 +71,7 @@ function doGet(e) {
 
 /* ---------- Instagram: daily fetch into the Instagram tab ---------- */
 function igSheet_() {
-  var ss = SpreadsheetApp.openById(SHEET_ID), s = ss.getSheetByName(IG_SHEET);
+  var ss = SpreadsheetApp.openById(SHEET_ID), s = byName_(ss, IG_SHEET);
   if (!s) { s = ss.insertSheet(IG_SHEET); s.appendRow(IGH); s.setFrozenRows(1); s.getRange('A:L').setNumberFormat('@'); }
   return s;
 }
@@ -161,7 +181,7 @@ var RQ_STATUSES = ['RAISED', 'APPROVED', 'REJECTED', 'IN PROGRESS', 'HOLD', 'COM
 var RQ_PRI = ['Normal', 'High', 'Urgent'];
 
 function tab_(name, head) {
-  var ss = SpreadsheetApp.openById(SHEET_ID), s = ss.getSheetByName(name);
+  var ss = SpreadsheetApp.openById(SHEET_ID), s = byName_(ss, name);
   if (!s) { s = ss.insertSheet(name); s.appendRow(head); s.setFrozenRows(1); s.getRange(1, 1, s.getMaxRows(), head.length).setNumberFormat('@'); }
   return s;
 }
@@ -372,7 +392,7 @@ function rqSync_(d) {
 function doPost(e) {
   var pre;
   try { pre = JSON.parse(e.postData.contents); } catch (x) { return json_({ ok: false, error: 'bad json' }); }
-  if (pre.action && /^(rq_|nt_)/.test(pre.action)) { return json_(shared_(pre)); }
+  if (pre.action && /^(rq_|nt_)/.test(pre.action)) { try { return json_(shared_(pre)); } catch (err) { return json_({ ok: false, error: 'Server error: ' + String(err) }); } }
   if (pre.action === 'chat') { try { return json_(chat_(pre)); } catch (err) { return json_({ ok: false, error: 'llm', detail: String(err) }); } }
   if (pre.action === 'ig_refresh') { return json_(fetchInstagram()); }
   var lock = LockService.getScriptLock();
