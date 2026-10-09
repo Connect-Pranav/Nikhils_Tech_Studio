@@ -13,7 +13,7 @@ function vCommand(){
   if(over)sum.push(over+' overdue');
   if(openReq)sum.push(openReq+(openReq===1?' request open':' requests open'));
   var line=sum.length?sum.join(', ')+'.':'Nothing pending. Assign the first piece of work below.';
-  var h='<section class="hero" data-a><div><h1>Hi<span>'+esc(line)+'</span></h1></div></section>';
+  var h='<section class="hero" data-a><div><h1>Hi'+(typeof rqReady==='function'&&rqReady()&&RQ.cfg.who?', '+esc(RQ.cfg.who):'')+'<span>'+esc(line)+'</span></h1></div></section>';
   /* command bar */
   var cbh='<div class="card" data-a><div class="row" style="flex-wrap:wrap;margin-bottom:18px"><div class="tabs"><button class="tb'+(state.cb==='assign'?' on':'')+'" data-cb="assign">Assign work</button><button class="tb'+(state.cb==='find'?' on':'')+'" data-cb="find">Find work</button></div></div>';
   if(state.cb==='assign'){
