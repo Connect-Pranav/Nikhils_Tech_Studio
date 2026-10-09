@@ -66,3 +66,11 @@ button.nti:hover{background:var(--s2)}button.nti:focus-visible{outline:2px solid
 .cxb:hover{background:var(--s2)}.cxb .ph{font-size:18px;flex:none;color:var(--act)}
 .cxb .cxt{display:flex;flex-direction:column;min-width:0;line-height:1.25}.cxb .cxt b{font-size:13px}.cxb .cxt .sm{font-size:11.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .cxb.ok .ph{color:var(--ok)}.cxb.warn .ph{color:var(--warn)}
+
+.hdt{display:flex;align-items:center;gap:10px;margin-left:auto;flex:none}
+.hds{display:flex;align-items:center;gap:8px;min-width:210px;height:42px;padding:0 12px;border-radius:999px;border:1px solid var(--ln);background:var(--s1);color:var(--mu);font:inherit;font-size:13px;cursor:pointer}
+.hds:hover{background:var(--s2);color:var(--tx)}.hds .ph{font-size:16px}.hds span{flex:1;text-align:left}.hds kbd{font:500 10.5px/1 Geist Mono,monospace;opacity:.7;border:1px solid var(--ln);border-radius:6px;padding:3px 5px}
+.hdu{display:flex;align-items:center;gap:8px;height:42px;padding:0 14px 0 5px;border-radius:999px;border:1px solid var(--ln);background:var(--s1);color:var(--tx);font:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.hdu:hover{background:var(--s2)}.hdu .hdav{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--ac);color:var(--acx);font-size:13px;font-weight:700}
+.hdu.warn .hdav{background:var(--warn);color:#1a1200}
+@media (max-width:1750px){.hds{min-width:0;width:42px;padding:0;justify-content:center}.hds span,.hds kbd{display:none}}
