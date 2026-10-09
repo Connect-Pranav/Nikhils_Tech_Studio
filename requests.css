@@ -59,3 +59,5 @@ button.nti:hover{background:var(--s2)}button.nti:focus-visible{outline:2px solid
   .rqcosts{grid-template-columns:1fr}
   .rqtop .btn{flex:1}
 }
+
+.ntp-q{padding:0 14px 10px;background:var(--bg);flex:none}.ntp-q input{width:100%;box-sizing:border-box}

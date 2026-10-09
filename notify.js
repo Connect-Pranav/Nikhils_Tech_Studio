@@ -1,5 +1,5 @@
 /* ---------- Notification centre: bell + red dot (from synced data), panel, Dal Abba "A message for you!" ---------- */
-var NT={open:false,filter:'all',bubble:null,bubTimer:null,focusBack:null};
+var NT={open:false,q:'',filter:'all',bubble:null,bubTimer:null,focusBack:null};
 var NT_FILTERS=[['all','All'],['unread','Unread'],['assigned','Assigned to me'],['mine','Raised by me'],['comments','Comments & mentions'],['status','Status changes'],['approvals','Approvals'],['due','Due reminders'],['cost','Cost changes'],['actions','This device']];
 var NT_ICON={assigned:'user',raised:'paper-plane-tilt',approval:'check-square',status:'arrows-clockwise',comment:'chat',mention:'chat-circle',cost:'currency-inr',due:'clock'};
 var NT_LABEL={assigned:'Assigned',raised:'New request',approval:'Approval',status:'Status',comment:'Comment',mention:'Mention',cost:'Cost',due:'Due'};
@@ -24,19 +24,22 @@ function ntMatch(x,f){
   if(f==='status')return x.type==='status';if(f==='approvals')return x.type==='approval';
   if(f==='due')return x.type==='due';if(f==='cost')return x.type==='cost';return true;
 }
+function ntQ(x){var q=NT.q.toLowerCase().replace(/^\s+|\s+$/g,'');if(!q)return true;return (String(x.actor)+' '+x.text+' '+x.title+' '+x.reqId+' '+(NT_LABEL[x.type]||x.type)+' '+(x.status||'')).toLowerCase().indexOf(q)>-1}
 function ntItem(x){
   var un=!x.readAt&&!RQ.localRead[x.id],st=x.status?rqStChip(x.status):'';
   return '<button class="nti'+(un?' un':'')+'" data-nt="'+esc(x.id)+'" data-ntr="'+esc(x.reqId)+'"><span class="nti-i">'+ico(NT_ICON[x.type]||'bell')+'</span><span class="nti-b"><span class="nti-t"><b>'+esc(x.actor)+'</b> '+esc(x.text)+'</span><span class="nti-r"><span class="mono">'+esc(x.reqId)+'</span> · '+esc(x.title)+'</span><span class="nti-m"><span class="tg mt">'+esc(NT_LABEL[x.type]||x.type)+'</span>'+st+(x.estCost!==null&&x.estCost!==undefined?'<span class="tg mt">Est. '+rqInr(x.estCost)+'</span>':'')+'<span class="mu sm" title="'+esc(x.ts)+'">'+rqWhen(x.ts)+' · for '+esc(x.recipient)+'</span></span></span>'+(un?'<span class="nti-d" aria-label="Unread"></span>':'')+'</button>';
 }
 function ntRender(){
   var p=$('ntp');if(!p)return;
+  var qa=document.activeElement&&document.activeElement.id==='ntQ',qs=qa?document.activeElement.selectionStart:0;
   var i,h='',l=[],f=NT.filter,u=rqUnread().length;
-  if(f==='actions'){for(i=0;i<RQ.acts.length;i++){h+='<div class="nti act"><span class="nti-i">'+ico(RQ.acts[i].ok?'check-square':'info')+'</span><span class="nti-b"><span class="nti-t">'+esc(RQ.acts[i].text)+'</span><span class="nti-m"><span class="tg '+(RQ.acts[i].ok?'ok':'bad')+'">'+(RQ.acts[i].ok?'Completed':'Failed')+'</span><span class="mu sm">'+rqWhen(RQ.acts[i].ts)+'</span></span></span></div>'}if(!h)h='<div class="empty" style="padding:24px 16px">Nothing has been saved or failed on this device in this session.</div>'}
-  else{for(i=0;i<RQ.nts.length;i++){if(ntMatch(RQ.nts[i],f))l.push(RQ.nts[i])}
+  if(f==='actions'){for(i=0;i<RQ.acts.length;i++){h+='<div class="nti act"><span class="nti-i">'+ico(RQ.acts[i].ok?'check-square':'info')+'</span><span class="nti-b"><span class="nti-t">'+esc(RQ.acts[i].text)+'</span><span class="nti-m"><span class="tg '+(RQ.acts[i].ok?'ok':'bad')+'">'+(RQ.acts[i].ok?'Completed':'Failed')+'</span><span class="mu sm">'+rqWhen(RQ.acts[i].ts)+'</span></span></span></div>'}if(!h)h='<div class="empty" style="padding:24px 16px">Nothing has been saved or failed on this device in this session.</div>';h='<div class="nti act"><span class="nti-b"><button class="btn sm" data-ntprev>Preview Dal Abba message</button><span class="mu sm" style="display:block;margin-top:6px">Shows how the alert looks. It is a preview only and creates no notification.</span></span></div>'+h}
+  else{for(i=0;i<RQ.nts.length;i++){if(ntMatch(RQ.nts[i],f)&&ntQ(RQ.nts[i]))l.push(RQ.nts[i])}
     for(i=0;i<l.length;i++)h+=ntItem(l[i]);
-    if(!h)h='<div class="empty" style="padding:24px 16px">'+(!rqReady()?'Connect this device to receive notifications.':f==='unread'?'You are all caught up.':'No notifications here yet.')+'</div>'}
+    if(!h)h='<div class="empty" style="padding:24px 16px">'+(!rqReady()?'Connect this device to receive notifications.':NT.q?'No notification matches "'+esc(NT.q)+'".':f==='unread'?'You are all caught up.':'No notifications yet. You are notified when someone else raises, assigns, approves, comments on or changes a request that involves you. Your own actions never notify you.')+'</div>'}
   var chips='';for(i=0;i<NT_FILTERS.length;i++){chips+='<button class="tb'+(f===NT_FILTERS[i][0]?' on':'')+'" data-ntf="'+NT_FILTERS[i][0]+'">'+NT_FILTERS[i][1]+(NT_FILTERS[i][0]==='unread'&&u?' '+u:'')+'</button>'}
-  p.innerHTML='<div class="ntp-h"><b>Notifications</b><span class="mu sm">'+(rqReady()?'for '+esc(RQ.cfg.who):'')+'</span><span class="sp"></span><button class="btn sm g" data-ntall'+(u?'':' disabled')+'>Mark all read</button><button class="nj-ib" data-ntx aria-label="Close notifications">'+ico('x')+'</button></div><div class="ntp-f" role="toolbar" aria-label="Filter notifications">'+chips+'</div><div class="ntp-l" role="list">'+h+'</div><div class="ntp-s mu sm" id="ntSync">'+esc(rqSyncText())+'</div>';
+  p.innerHTML='<div class="ntp-h"><b>Notifications</b><span class="mu sm">'+(rqReady()?'for '+esc(RQ.cfg.who):'')+'</span><span class="sp"></span><button class="btn sm g" data-ntall'+(u?'':' disabled')+'>Mark all read</button><button class="nj-ib" data-ntx aria-label="Close notifications">'+ico('x')+'</button></div><div class="ntp-f" role="toolbar" aria-label="Filter notifications">'+chips+'</div><div class="ntp-q"><input type="search" id="ntQ" class="inp" placeholder="Search notifications" aria-label="Search notifications" autocomplete="off" value="'+esc(NT.q)+'"></div><div class="ntp-l" role="list">'+h+'</div><div class="ntp-s mu sm" id="ntSync">'+esc(rqSyncText())+'</div>';
+  if(qa){var qi=$('ntQ');if(qi){qi.focus();try{qi.setSelectionRange(qs,qs)}catch(e){}}}
 }
 function ntEnsure(){
   if($('ntp'))return;
@@ -95,6 +98,7 @@ function ntAnnounce(){
 }
 function ntBubbleOpen(){
   var l=NT.bubble||[];ntHideBubble();
+  if(l.length&&l[0].preview){ntOpen('all');return}
   if(l.length===1)ntGoto(l[0].id,l[0].reqId);else ntOpen('unread');
 }
 
@@ -108,11 +112,13 @@ document.addEventListener('click',function(e){
   if(t.closest('[data-ntbub]')){ntBubbleOpen();return}
   if(t.closest('[data-ntbx]')){ntHideBubble();return}
   if(t.closest('[data-ntx]')){ntClose();return}
+  if(t.closest('[data-ntprev]')){ntClose(false);setTimeout(function(){ntShowBubble([{id:'preview',reqId:'',preview:true}])},120);return}
   if(t.closest('[data-ntall]')){rqQueueRead([],true);ntRender();return}
   n=t.closest('[data-ntf]');if(n){NT.filter=n.getAttribute('data-ntf');ntRender();return}
   n=t.closest('[data-nt]');if(n){ntGoto(n.getAttribute('data-nt'),n.getAttribute('data-ntr'));return}
   if(NT.open&&!t.closest('#ntp'))ntClose(false);
 });
+document.addEventListener('input',function(e){var t=e.target;if(t&&t.id==='ntQ'){NT.q=t.value;ntRender()}});
 document.addEventListener('keydown',function(e){if(e.key==='Escape'){if(NT.open){ntClose();e.stopPropagation()}else if(NT.bubble)ntHideBubble()}});
 window.addEventListener('resize',ntPlace);
 rqOn(function(){ntBadge();if(NT.open){var l=$('ntp').querySelector('.ntp-l'),y=l?l.scrollTop:0;ntRender();l=$('ntp').querySelector('.ntp-l');if(l)l.scrollTop=y}ntAnnounce()});
