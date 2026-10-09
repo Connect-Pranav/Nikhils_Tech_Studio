@@ -124,3 +124,13 @@ window.addEventListener('resize',ntPlace);
 rqOn(function(){ntBadge();if(NT.open){var l=$('ntp').querySelector('.ntp-l'),y=l?l.scrollTop:0;ntRender();l=$('ntp').querySelector('.ntp-l');if(l)l.scrollTop=y}ntAnnounce()});
 ntBadge();
 setTimeout(rqStart,0);
+
+/* ---- Connection shortcut in the sidebar footer: visible on every page ---- */
+(function(){
+  var st=document.querySelector('#side .st,.st');if(!st||$('cxBtn'))return;
+  st.innerHTML='<button type="button" class="cxb" id="cxBtn" aria-label="Open connection settings"><i class="ph ph-link" aria-hidden="true"></i><span class="cxt"><b>Connection</b><span class="mu sm" id="cxT"></span></span></button><span id="sync" hidden></span>';
+  var cn=$('cnBtn');if(cn)cn.style.display='none';
+  function upd(){var t=$('cxT'),b=$('cxBtn');if(!t)return;var tx=rqReady()?(RQ.cfg.who+' · '+rqSyncText()):'Not connected. Tap to set up';t.textContent=tx;b.className='cxb'+(RQ.state==='error'||!rqReady()?' warn':RQ.state==='ok'&&rqShared()?' ok':'')}
+  $('cxBtn').addEventListener('click',function(){rqConnectModal();var s=$('side');if(s&&s.classList)s.classList.remove('open')});
+  rqOn(upd);upd();setInterval(upd,5000);
+})();

@@ -61,3 +61,8 @@ button.nti:hover{background:var(--s2)}button.nti:focus-visible{outline:2px solid
 }
 
 .ntp-q{padding:0 14px 10px;background:var(--bg);flex:none}.ntp-q input{width:100%;box-sizing:border-box}
+
+.cxb{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:8px 10px;border-radius:14px;border:1px solid var(--ln);background:var(--s1);color:var(--tx);cursor:pointer;font:inherit}
+.cxb:hover{background:var(--s2)}.cxb .ph{font-size:18px;flex:none;color:var(--act)}
+.cxb .cxt{display:flex;flex-direction:column;min-width:0;line-height:1.25}.cxb .cxt b{font-size:13px}.cxb .cxt .sm{font-size:11.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cxb.ok .ph{color:var(--ok)}.cxb.warn .ph{color:var(--warn)}
