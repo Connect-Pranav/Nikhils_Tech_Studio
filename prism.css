@@ -1,0 +1,383 @@
+/* Prism-inspired design system: modern, polished, glass morphism with vibrant accents
+   Enhances glass.css with Prism aesthetics: pill UI, smooth gradients, refined spacing, animations */
+
+:root{
+  /* Prism color palette: vibrant accents on dark glass base */
+  --pr-blue:#4f8fe6;--pr-cyan:#00d4ff;--pr-purple:#b366ff;--pr-pink:#ff6b9d;
+  --pr-green:#3ecf9e;--pr-orange:#ff9d3d;--pr-red:#ff6b6b;
+  /* Prism gradients */
+  --pr-grad-blue:linear-gradient(135deg,#4f8fe6,#2563eb);
+  --pr-grad-purple:linear-gradient(135deg,#b366ff,#8b5cf6);
+  --pr-grad-cyan:linear-gradient(135deg,#00d4ff,#06b6d4);
+  --pr-grad-warm:linear-gradient(135deg,#ff9d3d,#f97316);
+}
+
+/* Enhanced typography: Prism style */
+body{
+  font-family:'Geist','SF Pro Display',system-ui,-apple-system,sans-serif;
+  letter-spacing:-.008em;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility
+}
+
+/* Headings: gradient text, tight line-height */
+h1,h2,.hero h1,.ph1 h2{
+  letter-spacing:-.04em;
+  font-weight:700;
+  line-height:1.1
+}
+
+.hero h1,.ph1 h2{
+  background:var(--ttl);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+  color:transparent
+}
+
+/* Refined spacing scale: tighter, more intentional */
+.wrap{max-width:1600px;margin:0 auto;padding:0 clamp(16px,4vw,48px)}
+
+/* Enhanced buttons: Prism pill style with smooth transitions */
+.btn{
+  min-height:44px;
+  padding:0 24px;
+  border-radius:999px;
+  font-weight:600;
+  font-size:13px;
+  letter-spacing:-.01em;
+  transition:all .3s cubic-bezier(.34,.69,.42,.98);
+  position:relative;
+  overflow:hidden;
+  border:1px solid transparent
+}
+
+.btn::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at var(--mx,30%) var(--my,30%),rgba(255,255,255,.15),transparent 50%);
+  opacity:0;
+  transition:opacity .3s ease
+}
+
+.btn:hover::before{opacity:1}
+
+.btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 32px rgba(0,0,0,.3)
+}
+
+.btn:active{
+  transform:translateY(0);
+  box-shadow:0 6px 16px rgba(0,0,0,.2)
+}
+
+/* Primary button: vibrant blue gradient */
+.btn{
+  background:var(--pr-grad-blue);
+  color:#fff;
+  box-shadow:0 8px 24px rgba(79,143,230,.25)
+}
+
+.btn.g{
+  background:rgba(255,255,255,.08);
+  color:var(--tx);
+  border-color:rgba(255,255,255,.12);
+  box-shadow:0 4px 16px rgba(0,0,0,.15)
+}
+
+.btn.g:hover{
+  background:rgba(255,255,255,.12);
+  border-color:rgba(255,255,255,.25)
+}
+
+[data-theme="light"] .btn{
+  background:var(--pr-grad-blue);
+  box-shadow:0 8px 20px rgba(79,143,230,.2)
+}
+
+[data-theme="light"] .btn.g{
+  background:rgba(255,255,255,.85);
+  color:#1d4f9f;
+  border-color:rgba(60,90,130,.15)
+}
+
+/* Cards: refined glass effect, subtle gradients */
+.card{
+  background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02));
+  -webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:20px;
+  box-shadow:0 8px 24px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.1);
+  transition:all .3s ease;
+  position:relative;
+  overflow:hidden
+}
+
+.card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at var(--mx,0%) var(--my,0%),rgba(79,143,230,.05),transparent 80%);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .3s ease
+}
+
+.card:hover{
+  border-color:rgba(255,255,255,.15);
+  box-shadow:0 12px 32px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.15)
+}
+
+.card:hover::before{opacity:1}
+
+[data-theme="light"] .card{
+  background:linear-gradient(145deg,rgba(255,255,255,.9),rgba(255,255,255,.45));
+  box-shadow:0 6px 20px rgba(50,80,120,.12),inset 0 1px 0 rgba(255,255,255,1)
+}
+
+/* Tag/chip: Prism pill style with color variants */
+.tg{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  background:rgba(255,255,255,.08);
+  color:var(--mu);
+  border:1px solid rgba(255,255,255,.12);
+  transition:all .25s ease;
+  white-space:nowrap
+}
+
+.tg:hover{
+  background:rgba(255,255,255,.12);
+  border-color:rgba(255,255,255,.2)
+}
+
+.tg.ok{color:var(--ok);background:rgba(62,207,158,.12);border-color:rgba(62,207,158,.2)}
+.tg.warn{color:var(--warn);background:rgba(240,192,94,.12);border-color:rgba(240,192,94,.2)}
+.tg.bad{color:var(--bad);background:rgba(242,143,132,.12);border-color:rgba(242,143,132,.2)}
+.tg.ac{color:var(--act);background:rgba(79,143,230,.12);border-color:rgba(79,143,230,.2)}
+
+/* Form inputs: glass style, smooth focus */
+.fld input,.fld select,.fld textarea{
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:12px;
+  color:var(--tx);
+  transition:all .25s ease;
+  font:inherit;
+  font-size:13px;
+  padding:11px 14px;
+  min-height:44px
+}
+
+.fld input:focus,.fld select:focus,.fld textarea:focus{
+  background:rgba(255,255,255,.09);
+  border-color:rgba(79,143,230,.4);
+  box-shadow:0 0 0 3px rgba(79,143,230,.15);
+  outline:0
+}
+
+[data-theme="light"] .fld input,[data-theme="light"] .fld select,[data-theme="light"] .fld textarea{
+  background:rgba(255,255,255,.8);
+  border-color:rgba(60,90,130,.15)
+}
+
+[data-theme="light"] .fld input:focus,[data-theme="light"] .fld select:focus,[data-theme="light"] .fld textarea:focus{
+  background:rgba(255,255,255,.95);
+  border-color:rgba(79,143,230,.4);
+  box-shadow:0 0 0 3px rgba(79,143,230,.1)
+}
+
+/* Navigation: enhanced pill style */
+.hd .seg1{
+  padding:6px;
+  gap:4px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.1);
+  backdrop-filter:blur(16px);
+  border-radius:999px;
+  box-shadow:0 4px 16px rgba(0,0,0,.1)
+}
+
+.gb{
+  padding:8px 16px;
+  border-radius:999px;
+  font-weight:550;
+  font-size:13px;
+  transition:all .25s ease;
+  border:1px solid transparent;
+  color:var(--tx)
+}
+
+.gb:hover{
+  background:rgba(255,255,255,.08);
+  border-color:rgba(255,255,255,.15)
+}
+
+.gb.on{
+  background:rgba(79,143,230,.15);
+  border-color:rgba(79,143,230,.3);
+  color:var(--act);
+  box-shadow:0 4px 16px rgba(79,143,230,.15)
+}
+
+[data-theme="light"] .gb.on{
+  background:rgba(79,143,230,.1);
+  border-color:rgba(79,143,230,.3);
+  color:#2563eb
+}
+
+/* Sidebar navigation items: pill style */
+.sn{
+  padding:8px 12px;
+  border-radius:12px;
+  font-weight:550;
+  font-size:13px;
+  transition:all .25s ease;
+  border:1px solid transparent;
+  color:var(--tx)
+}
+
+.sn:hover{
+  background:rgba(255,255,255,.08);
+  border-color:rgba(255,255,255,.12)
+}
+
+.sn.on{
+  background:rgba(79,143,230,.15);
+  border-color:rgba(79,143,230,.3);
+  color:var(--act);
+  box-shadow:0 4px 12px rgba(79,143,230,.1)
+}
+
+/* Tabs: pill-style with smooth transitions */
+.tb{
+  padding:9px 16px;
+  border-radius:999px;
+  font-weight:550;
+  font-size:12px;
+  letter-spacing:-.01em;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.1);
+  color:var(--mu);
+  transition:all .25s ease;
+  white-space:nowrap
+}
+
+.tb:hover{
+  background:rgba(255,255,255,.1);
+  border-color:rgba(255,255,255,.2);
+  color:var(--tx)
+}
+
+.tb.on{
+  background:rgba(79,143,230,.2);
+  border-color:rgba(79,143,230,.4);
+  color:var(--act);
+  box-shadow:0 4px 16px rgba(79,143,230,.15)
+}
+
+/* List items: refined spacing */
+.list>.ri{
+  padding:14px 0;
+  border-top:1px solid rgba(255,255,255,.05);
+  transition:background .2s ease
+}
+
+.list>.ri:first-child{border-top:0;padding-top:0}
+
+.list>.ri:hover{
+  background:rgba(255,255,255,.03)
+}
+
+/* Progress ring: Prism gradient */
+.ring{
+  background:conic-gradient(var(--pr-cyan) var(--p,0%),rgba(255,255,255,.1) 0);
+  box-shadow:0 0 0 1px rgba(255,255,255,.1)
+}
+
+.ring:after{
+  background:var(--bg);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.05)
+}
+
+/* Progress bar: vibrant gradient */
+.bar{
+  background:rgba(255,255,255,.08);
+  border-radius:2px;
+  overflow:hidden;
+  margin-top:16px
+}
+
+.bar i{
+  background:linear-gradient(90deg,var(--pr-cyan),var(--pr-blue));
+  height:100%;
+  border-radius:2px;
+  box-shadow:0 0 16px rgba(79,143,230,.3)
+}
+
+/* Modals: enhanced glass */
+.mod,.pal{
+  background:linear-gradient(145deg,rgba(38,50,70,.95),rgba(24,32,46,.97));
+  -webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:24px;
+  box-shadow:0 20px 60px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.1)
+}
+
+/* Smooth animations and transitions */
+@media (prefers-reduced-motion:no-preference){
+  .btn,.gb,.sn,.tb,.tg,.fld input{
+    transition:all .3s cubic-bezier(.34,.69,.42,.98)
+  }
+
+  @keyframes slideIn{
+    from{opacity:0;transform:translateY(8px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+
+  .card{animation:slideIn .4s cubic-bezier(.34,.69,.42,.98)}
+}
+
+/* Accessibility: respect prefers-reduced-motion */
+@media (prefers-reduced-motion:reduce){
+  .btn,.gb,.sn,.tb,.tg,.card,.fld input{
+    transition:none
+  }
+}
+
+/* Light theme refinements */
+[data-theme="light"] .tg{
+  background:rgba(60,90,130,.08);
+  color:var(--ac);
+  border-color:rgba(60,90,130,.12)
+}
+
+[data-theme="light"] .tg:hover{
+  background:rgba(60,90,130,.15);
+  border-color:rgba(60,90,130,.2)
+}
+
+[data-theme="light"] .card::before{
+  background:radial-gradient(circle at var(--mx,0%) var(--my,0%),rgba(79,143,230,.03),transparent 80%)
+}
+
+/* Responsive: maintain Prism aesthetic at all breakpoints */
+@media (max-width:820px){
+  .btn{min-height:42px;padding:0 20px;font-size:12px}
+  .tb,.gb,.sn{font-size:12px}
+  .hd .seg1{padding:4px;gap:2px}
+}
+
+@media (max-width:480px){
+  .btn{min-height:40px;padding:0 16px;font-size:11px}
+  .card{border-radius:16px}
+  .tg{font-size:10px;padding:5px 10px}
+}

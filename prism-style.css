@@ -1,0 +1,319 @@
+/* Prism-enhanced style refinements: typography, spacing, components */
+
+/* Enhanced typography for Prism aesthetic */
+body{
+  font-family:'Geist',system-ui,-apple-system,'Segoe UI',sans-serif;
+  font-size:13px;
+  line-height:1.6;
+  letter-spacing:-.008em;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility
+}
+
+/* Headings: refined scale and weight */
+h1,h2,h3{font-weight:700;letter-spacing:-.04em;line-height:1.1}
+
+h1{font-size:clamp(28px,5vw,48px)}
+h2{font-size:clamp(22px,4vw,36px)}
+h3{font-size:clamp(16px,2.5vw,20px)}
+
+/* Enhanced hero section */
+.hero{padding:20px 0 40px}
+.hero h1{
+  background:var(--ttl);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+  color:transparent;
+  margin-bottom:12px
+}
+
+.hero h1 span{
+  display:block;
+  color:var(--mu);
+  font-weight:500;
+  font-size:clamp(13px,1.8vw,16px);
+  margin-top:8px;
+  letter-spacing:-.01em
+}
+
+/* Page headers: Prism style */
+.ph1{padding:48px 0 28px}
+.ph1 h2{
+  background:var(--ttl);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+  color:transparent
+}
+
+.ph1 p{
+  color:var(--mu);
+  margin-top:12px;
+  max-width:65ch;
+  font-size:14px;
+  line-height:1.6;
+  letter-spacing:-.005em
+}
+
+/* Refined card styling with Prism enhancements */
+.card{
+  background:linear-gradient(145deg,rgba(255,255,255,.07),rgba(255,255,255,.01));
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:20px;
+  padding:24px;
+  -webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);
+  box-shadow:0 8px 24px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.08);
+  transition:all .3s cubic-bezier(.34,.69,.42,.98);
+  position:relative;
+  overflow:hidden
+}
+
+.card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at var(--mx,0%) var(--my,0%),rgba(79,143,230,.04),transparent 80%);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .3s ease
+}
+
+.card:hover{
+  border-color:rgba(255,255,255,.15);
+  box-shadow:0 12px 36px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.12)
+}
+
+.card:hover::before{opacity:1}
+
+.card.tint{
+  background:linear-gradient(160deg,rgba(79,143,230,.15),rgba(79,143,230,.05) 40%,rgba(255,255,255,.05));
+  border-color:rgba(79,143,230,.15)
+}
+
+/* Enhanced buttons */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  min-height:44px;
+  padding:0 24px;
+  border-radius:999px;
+  background:linear-gradient(180deg,#5b9bf0,#3f7fdb);
+  color:#fff;
+  font-weight:600;
+  font-size:13px;
+  letter-spacing:-.01em;
+  border:1px solid rgba(255,255,255,.2);
+  box-shadow:0 8px 24px rgba(79,143,230,.25),inset 0 1px 0 rgba(255,255,255,.3);
+  cursor:pointer;
+  text-decoration:none;
+  white-space:nowrap;
+  transition:all .3s cubic-bezier(.34,.69,.42,.98);
+  position:relative;
+  overflow:hidden
+}
+
+.btn::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.2),transparent 60%);
+  opacity:0;
+  transition:opacity .3s ease
+}
+
+.btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 32px rgba(79,143,230,.35),inset 0 1px 0 rgba(255,255,255,.4);
+  border-color:rgba(255,255,255,.3)
+}
+
+.btn:hover::before{opacity:1}
+
+.btn:active{
+  transform:translateY(0);
+  box-shadow:0 6px 16px rgba(79,143,230,.2),inset 0 1px 0 rgba(255,255,255,.2)
+}
+
+.btn.g{
+  background:rgba(255,255,255,.08);
+  color:var(--tx);
+  border-color:rgba(255,255,255,.12);
+  box-shadow:0 4px 16px rgba(0,0,0,.15),inset 0 1px 0 rgba(255,255,255,.08)
+}
+
+.btn.g:hover{
+  background:rgba(255,255,255,.12);
+  border-color:rgba(255,255,255,.2);
+  box-shadow:0 8px 20px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.12)
+}
+
+.btn.sm{
+  min-height:38px;
+  padding:0 16px;
+  font-size:12px
+}
+
+/* Enhanced form inputs */
+.fld input,.fld select,.fld textarea{
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:12px;
+  color:var(--tx);
+  font:inherit;
+  font-size:13px;
+  padding:11px 14px;
+  min-height:44px;
+  transition:all .25s cubic-bezier(.34,.69,.42,.98);
+  outline:0
+}
+
+.fld input::placeholder,.fld textarea::placeholder{
+  color:var(--mu);
+  opacity:.7
+}
+
+.fld input:focus,.fld select:focus,.fld textarea:focus{
+  background:rgba(255,255,255,.09);
+  border-color:rgba(79,143,230,.4);
+  box-shadow:0 0 0 3px rgba(79,143,230,.12);
+  color:var(--tx)
+}
+
+.fld textarea{
+  resize:vertical;
+  min-height:120px;
+  line-height:1.5
+}
+
+/* Enhanced tags/chips */
+.tg{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  background:rgba(255,255,255,.07);
+  color:var(--mu);
+  border:1px solid rgba(255,255,255,.11);
+  transition:all .25s ease;
+  white-space:nowrap
+}
+
+.tg:hover{
+  background:rgba(255,255,255,.11);
+  border-color:rgba(255,255,255,.18)
+}
+
+.tg.ok{color:var(--ok);background:rgba(62,207,158,.12);border-color:rgba(62,207,158,.2)}
+.tg.warn{color:var(--warn);background:rgba(240,192,94,.12);border-color:rgba(240,192,94,.2)}
+.tg.bad{color:var(--bad);background:rgba(242,143,132,.12);border-color:rgba(242,143,132,.2)}
+.tg.ac{color:var(--act);background:rgba(79,143,230,.12);border-color:rgba(79,143,230,.2)}
+
+/* Enhanced navigation */
+.hd{
+  background:rgba(13,18,24,.5);
+  -webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255,255,255,.08);
+  box-shadow:0 4px 12px rgba(0,0,0,.1)
+}
+
+.hd .seg1{
+  padding:6px;
+  gap:4px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:999px;
+  -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+  box-shadow:0 4px 16px rgba(0,0,0,.1)
+}
+
+.gb{
+  padding:8px 16px;
+  border-radius:999px;
+  font-weight:550;
+  font-size:12px;
+  letter-spacing:-.01em;
+  transition:all .25s ease;
+  border:1px solid transparent;
+  color:var(--tx)
+}
+
+.gb:hover{
+  background:rgba(255,255,255,.08);
+  border-color:rgba(255,255,255,.15)
+}
+
+.gb.on{
+  background:rgba(79,143,230,.2);
+  border-color:rgba(79,143,230,.35);
+  color:var(--act);
+  box-shadow:0 4px 16px rgba(79,143,230,.12)
+}
+
+/* Smooth transitions and animations */
+@media (prefers-reduced-motion:no-preference){
+  .btn,.gb,.tg,.card,.fld input{
+    transition:all .3s cubic-bezier(.34,.69,.42,.98)
+  }
+
+  @keyframes slideInUp{
+    from{opacity:0;transform:translateY(12px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+
+  .card{animation:slideInUp .4s cubic-bezier(.34,.69,.42,.98) backwards}
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion:reduce){
+  .btn,.gb,.tg,.card,.fld input{transition:none}
+}
+
+/* Light theme enhancements */
+[data-theme="light"] .card{
+  background:linear-gradient(145deg,rgba(255,255,255,.92),rgba(255,255,255,.5));
+  border-color:rgba(60,90,130,.12);
+  box-shadow:0 6px 20px rgba(50,80,120,.12),inset 0 1px 0 rgba(255,255,255,1)
+}
+
+[data-theme="light"] .btn{
+  background:linear-gradient(180deg,#5b9bf0,#3f7fdb);
+  box-shadow:0 8px 20px rgba(79,143,230,.2),inset 0 1px 0 rgba(255,255,255,.3)
+}
+
+[data-theme="light"] .fld input,[data-theme="light"] .fld select,[data-theme="light"] .fld textarea{
+  background:rgba(255,255,255,.85);
+  border-color:rgba(60,90,130,.15)
+}
+
+[data-theme="light"] .fld input:focus,[data-theme="light"] .fld select:focus,[data-theme="light"] .fld textarea:focus{
+  background:rgba(255,255,255,.95);
+  border-color:rgba(79,143,230,.4);
+  box-shadow:0 0 0 3px rgba(79,143,230,.1)
+}
+
+[data-theme="light"] .tg{
+  background:rgba(60,90,130,.08);
+  color:var(--ac);
+  border-color:rgba(60,90,130,.12)
+}
+
+/* Responsive refinements */
+@media (max-width:820px){
+  .btn{min-height:42px;padding:0 20px;font-size:12px}
+  .tg{font-size:10px;padding:5px 10px}
+  .card{padding:20px;border-radius:16px}
+}
+
+@media (max-width:480px){
+  .wrap{padding:0 clamp(12px,3vw,20px)}
+  .btn{min-height:40px;padding:0 16px;font-size:11px}
+  .card{padding:16px;border-radius:14px}
+  .hero{padding:16px 0 24px}
+  .ph1{padding:32px 0 20px}
+}
