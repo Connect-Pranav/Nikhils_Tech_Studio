@@ -18,23 +18,29 @@
 <link rel="stylesheet" href="glass.css">
 <link rel="stylesheet" href="prism.css">
 <link rel="stylesheet" href="prism-style.css">
-<link rel="stylesheet" href="topbar.css">
-<link rel="stylesheet" href="splash.css">
+<link rel="stylesheet" href="splash-new.css">
+<link rel="stylesheet" href="topbar-new.css">
 </head>
 <body>
 <canvas id="fx" aria-hidden="true"></canvas><div id="glow" aria-hidden="true"></div>
 <div id="splash" role="status" aria-label="Welcome screen">
   <div class="splash-content">
-    <div class="splash-logo" id="splashLogo">N</div>
-    <h1 class="splash-title">Welcome</h1>
-    <p class="splash-subtitle" id="splashGreeting">Starting your studio session...</p>
-    <div class="splash-tag"><i class="ph ph-sparkle" aria-hidden="true"></i>Prism</div>
-    <div class="splash-buttons">
-      <button class="splash-btn" id="splashConnect">Connect Backend<i class="ph ph-arrow-up-right" aria-hidden="true"></i></button>
-      <button class="splash-btn secondary" id="splashGuest">Guest Access<i class="ph ph-user" aria-hidden="true"></i></button>
+    <div class="splash-logo-container">
+      <div class="splash-logo" id="splashLogo">N</div>
     </div>
-    <div class="splash-progress"><i></i></div>
-    <div class="splash-hint">Press any key or tap to continue</div>
+    <h1 class="splash-heading">NIKHIL'S TECH STUDIO</h1>
+    <p class="splash-subtitle">Your creative workspace for building, learning, and growing</p>
+    <div class="splash-modes">
+      <button class="splash-mode-btn primary" id="splashConnect">
+        <i class="ph ph-cloud-check" aria-hidden="true"></i>
+        Connect Backend
+      </button>
+      <button class="splash-mode-btn secondary" id="splashGuest">
+        <i class="ph ph-user" aria-hidden="true"></i>
+        Guest Access
+      </button>
+    </div>
+    <div class="splash-status">Ready to begin</div>
   </div>
 </div>
 <div class="shell">
@@ -67,15 +73,15 @@
       <div class="hd-left"></div>
       <div class="hd-center" id="nav"></div>
       <div class="hd-right">
-        <div class="search-bar" id="topSearchBar">
+        <div class="search-bar">
           <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
-          <input type="text" id="topSearch" placeholder="Search..." autocomplete="off">
+          <input type="text" placeholder="Search..." autocomplete="off">
         </div>
         <button class="notif-bell" id="topNotifBell" aria-label="Notifications">
           <i class="ph ph-bell" aria-hidden="true"></i>
           <span class="notif-badge" id="notifBadge"></span>
         </button>
-        <div class="connection-status" id="connStatus" title="Click to connect"></div>
+        <div class="connection-dot" id="connStatus" title="Click to connect"></div>
         <div class="user-name" id="topUserName">User</div>
       </div>
     </div>
@@ -91,8 +97,9 @@
 <div class="toast" id="toast" role="status"></div>
 <input type="file" id="logoIn" accept="image/*" hidden>
 
-<script src="splash.js"></script>
+<script src="splash-new.js"></script>
 <script src="topbar.js"></script>
+<script src="app-new.js"></script>
 <script src="data.js"></script>
 <script src="ui.js"></script>
 <script src="views.js"></script>
