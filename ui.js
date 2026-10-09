@@ -9,12 +9,15 @@ var PAGES={command:['Command center','squares-four'],tasks:['Tasks','check-squar
 var GROUPS=[['Home','house',['command']],['Work','check-square',['tasks','requests','objectives','projects']],['Studio','film-strip',['content','creative','uploads','models','voice']],['Growth','chart-line-up',['marketing','instagram','crm','monetization','analytics']],['Intelligence','sparkle',['ai']],['Team','users',['team']]];
 var state={page:'command',founder:false,cb:'assign',taskTab:'pending',owner:'All',status:'All',when:'any',reqTab:'ALL',upTab:'ALL',crTab:'ALL',open:{},fresh:null,last:{}};
 function groupOf(p){var i;for(i=0;i<GROUPS.length;i++){if(GROUPS[i][2].indexOf(p)>-1)return i}return 0}
+var SNC=[['#6cc5ff','#0a84ff'],['#64e0c8','#00a7c4'],['#a58bff','#5b5bf0'],['#ffb86b','#ff7a2f'],['#6df08f','#1fb85a'],['#ff8fb1','#e0457a']];
 function renderNav(){
   var gi=groupOf(state.page),h='<div class="seg1">',i,pg;
   for(i=0;i<GROUPS.length;i++){h+='<button class="gb'+(i===gi?' on':'')+'" data-g="'+i+'">'+ico(GROUPS[i][1])+'<span>'+GROUPS[i][0]+'</span></button>'}
   h+='</div>';pg=GROUPS[gi][2];
   if(pg.length>1){h+='<div class="seg2">';for(i=0;i<pg.length;i++){h+='<button class="sb'+(state.page===pg[i]?' on':'')+'" data-p="'+pg[i]+'">'+PAGES[pg[i]][0]+'</button>'}h+='</div>'}
   $('nav').innerHTML=h;
+  var sn='',g,pp,j;for(g=0;g<GROUPS.length;g++){pp=GROUPS[g][2];sn+='<div class="sl">'+GROUPS[g][0]+'</div>';for(j=0;j<pp.length;j++){sn+='<button class="sn'+(state.page===pp[j]?' on':'')+'" data-p="'+pp[j]+'"><span class="it" style="--h1:'+SNC[g%SNC.length][0]+';--h2:'+SNC[g%SNC.length][1]+'">'+ico(PAGES[pp[j]][1])+'</span><span>'+PAGES[pp[j]][0]+'</span></button>'}}
+  var sv=$('snav');if(sv){sv.innerHTML=sn;var on=sv.querySelector('.on');if(on&&sv.clientHeight&&(on.offsetTop+on.offsetHeight>sv.scrollTop+sv.clientHeight||on.offsetTop<sv.scrollTop))sv.scrollTop=Math.max(0,on.offsetTop-sv.clientHeight/2)}
   var bm=[['command','Home','house'],['tasks','Tasks','check-square'],['requests','Requests','paper-plane-tilt'],['uploads','Uploads','upload-simple'],['more','More','dots-three']],b='';
   for(i=0;i<bm.length;i++){b+='<button data-p="'+bm[i][0]+'" class="'+(state.page===bm[i][0]?'on':'')+'">'+ico(bm[i][2])+'<span>'+bm[i][1]+'</span></button>'}
   $('bnav').innerHTML=b;
