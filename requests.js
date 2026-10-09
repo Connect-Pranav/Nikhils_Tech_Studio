@@ -196,7 +196,9 @@ function rqSaveConn(){
     b.disabled=false;b.textContent='Test and save';
     if(r&&r.ok){rqSaveCfg();RQ.reqs=r.requests;RQ.act=r.activity;RQ.nts=r.notifications;RQ.last=Date.now();RQ.state='ok';RQ.err='';RQ.fromCache=false;rqSaveCache();closeMod();toast('Connected as '+w);rqStart();render(true);return}
     RQ.cfg.url=old.u;RQ.cfg.key=old.k;RQ.cfg.who=old.w;er.textContent=rqErrText(r&&r.error);er.style.display='block';
-  }).catch(function(e){b.disabled=false;b.textContent='Test and save';RQ.cfg.url=old.u;RQ.cfg.key=old.k;RQ.cfg.who=old.w;er.textContent=(e&&e.msg)||'Could not reach the URL.';er.style.display='block'});
+  }).catch(function(e){b.disabled=false;b.textContent='Test and save';RQ.cfg.url=old.u;RQ.cfg.key=old.k;RQ.cfg.who=old.w;er.textContent=((e&&e.msg)||'Could not reach the URL.')+' Checking why...';er.style.display='block';
+    fetch(u+(u.indexOf('?')>-1?'&':'?')+'probe=1').then(function(r){return r.text()}).then(function(){er.textContent='The URL can be read from this page, but the save request was refused or the script errored. Paste the latest Code.gs into Apps Script, then Deploy > Manage deployments > pencil > New version > Deploy, and try again.'}).catch(function(x){er.textContent='This page cannot read that URL at all ('+((x&&x.message)||'blocked')+'). Check the URL is complete, ends in /exec, and the deployment access is Anyone.'});
+  });
 }
 function rqMigrate(){
   var l=rqLocalOld(),i=0,ok=0,fail=0;
