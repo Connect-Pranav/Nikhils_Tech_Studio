@@ -49,9 +49,30 @@ function vRequests(){
   if(!l.length)lst='<div class="card"><div class="empty">'+(RQ.state==='loading'?'Loading requests...':RQ.reqs.length?'No requests match these filters.':'No requests yet. Raise the first one.')+'</div></div>';
   return h+top+tb+f+lst+rqLegacyCard();
 }
+function rqLocalMine(){
+  if(typeof lsLoad!=='function'||!rqShared())return [];
+  var d=lsLoad(),m=d.migrated||{},o=[],i;
+  for(i=0;i<d.reqs.length;i++){if(d.reqs[i].raisedBy===RQ.cfg.who&&!m[d.reqs[i].id])o.push(d.reqs[i])}
+  return o;
+}
+function rqLocalCard(){
+  var l=rqLocalMine();if(!l.length)return '';
+  return '<div class="card mt16" data-a><div class="h3">'+l.length+' request'+(l.length>1?'s':'')+' saved in this-device mode</div><div class="mu mt8" style="line-height:1.6">You raised these before connecting, so other devices cannot see them. Move them to the shared list and the whole team will. Estimates, status and dates are kept. Comments stay on this device.</div><div class="mt16"><button class="btn" data-rq="migratelocal">'+ico('upload-simple')+'Move to shared list</button></div></div>';
+}
+function rqMigrateLocal(){
+  var l=rqLocalMine(),i=0,ok=0,fail=0,last='';
+  function next(){
+    if(i>=l.length){toast(ok+' moved to the shared list'+(fail?', '+fail+' failed'+(last?': '+last:''):''));rqSync().then(function(){render(true)});return}
+    var r=l[i++];
+    rqWrite('rq_create',{req:{cid:'local-'+r.id+'-'+RQ.cfg.who,legacy:true,title:r.title,description:r.description,category:r.category,assignedTo:r.assignedTo,priority:r.priority,due:r.due,estCost:r.estCost===null?'':r.estCost,status:r.status,legacyCreated:r.created,visibility:r.visibility}}).then(function(x){
+      if(x.ok){ok++;var d=lsLoad();d.migrated=d.migrated||{};d.migrated[r.id]=1;lsSave(d)}else{fail++;last=rqErrText(x.error)}next();
+    }).catch(function(e){fail++;last=(e&&e.msg)||'network';next()});
+  }
+  next();
+}
 function rqLegacyCard(){
-  var l=rqLocalOld();if(!l.length)return '';
-  return '<div class="card mt16" data-a><div class="h3">'+l.length+' older request'+(l.length>1?'s':'')+' saved only on this device</div><div class="mu mt8" style="line-height:1.6">These were raised before shared requests existed, so other devices cannot see them. No cost was recorded and none is invented: they will show "Not provided" until someone enters an estimate.</div>'+(rqReady()?'<div class="mt16"><button class="btn" data-rq="migrate">'+ico('upload-simple')+'Move them to the shared list</button></div>':'<div class="mu sm mt8">Connect this device first.</div>')+'</div>';
+  var l=rqLocalOld();if(!l.length)return rqLocalCard();
+  return rqLocalCard()+'<div class="card mt16" data-a><div class="h3">'+l.length+' older request'+(l.length>1?'s':'')+' saved only on this device</div><div class="mu mt8" style="line-height:1.6">These were raised before shared requests existed, so other devices cannot see them. No cost was recorded and none is invented: they will show "Not provided" until someone enters an estimate.</div>'+(rqReady()?'<div class="mt16"><button class="btn" data-rq="migrate">'+ico('upload-simple')+'Move them to the shared list</button></div>':'<div class="mu sm mt8">Connect this device first.</div>')+'</div>';
 }
 
 /* ---- cost summary: estimates, approvals and actuals stay in separate columns; an estimate is never counted as spend ---- */
@@ -225,7 +246,7 @@ document.addEventListener('click',function(e){
   else if(a==='uselocal'||a==='uselocal0'){var w=$(a==='uselocal'?'rql_who':'rql_who0').value;RQ.cfg.local=true;RQ.cfg.who=w;rqSaveCfg();RQ.reqs=[];RQ.act=[];RQ.nts=[];RQ.state='loading';closeMod();rqStart();toast('Using requests on this device as '+w);render(true)}
   else if(a==='disconnect'){RQ.cfg.url=RQ.cfg.key='';RQ.cfg.who='';RQ.cfg.local=false;rqSaveCfg();RQ.reqs=[];RQ.act=[];RQ.nts=[];rqSaveCache();RQ.state='off';rqStart();closeMod();render(true);toast('Disconnected')}
   else if(a==='editcost')rqEditCost(p[1]);else if(a==='cancelcost'){$('rqCostEdit').innerHTML=''}
-  else if(a==='savecost')rqSaveCost(p[1]);else if(a==='comment')rqComment();else if(a==='migrate')rqMigrate();
+  else if(a==='savecost')rqSaveCost(p[1]);else if(a==='comment')rqComment();else if(a==='migrate')rqMigrate();else if(a==='migratelocal')rqMigrateLocal();
 });
 document.addEventListener('change',function(e){
   var t=e.target;if(!t||!t.id)return;

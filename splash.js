@@ -1,124 +1,30 @@
-/* Welcome splash manager: session-aware, auto-close, keyboard/tap skip */
-
+/* Welcome splash: shows once per browser session, then fades into the app. Tap, click or any key skips it. */
 (function(){
-  var SPLASH_SHOWN_KEY='splash_shown_session';
-  var AUTO_CLOSE_DELAY=4400;
-  var FADE_OUT_DELAY=400;
-
-  function $(id){return document.getElementById(id)}
-  function splashRendered(){return $('splash')}
-
-  function initSplash(){
-    /* Check if splash was already shown this session */
-    if(sessionStorage.getItem(SPLASH_SHOWN_KEY)){
-      removeSplash();
-      return
-    }
-
-    /* Mark session as shown */
-    sessionStorage.setItem(SPLASH_SHOWN_KEY,'1');
-
-    var splash=$('splash');
-    if(!splash)return;
-
-    /* Populate greeting with connected user name */
-    var greeting=$('splashGreeting');
-    var userName='Guest';
-    try{
-      if(window.CFG&&window.CFG.who){
-        userName=window.CFG.who;
-      }else if(window.nts_rq_cfg&&window.nts_rq_cfg.who){
-        userName=window.nts_rq_cfg.who;
-      }
-    }catch(e){}
-    if(greeting){
-      greeting.textContent='Welcome, '+userName;
-    }
-
-    /* Wire up buttons */
-    var enterBtn=$('splashEnter');
-    var settingsBtn=$('splashSettings');
-    if(enterBtn){
-      enterBtn.addEventListener('click',function(e){
-        e.preventDefault();
-        closeSplash();
-      },false);
-    }
-    if(settingsBtn){
-      settingsBtn.addEventListener('click',function(e){
-        e.preventDefault();
-        closeSplash();
-        if(window.go){window.go('settings');}
-      },false);
-    }
-
-    /* Auto-close after delay */
-    var autoCloseTimer=setTimeout(function(){
-      closeSplash();
-    },AUTO_CLOSE_DELAY);
-
-    /* Skip on key press */
-    function onKeyDown(e){
-      clearTimeout(autoCloseTimer);
-      closeSplash()
-    }
-
-    /* Skip on tap/click anywhere on splash */
-    function onClick(e){
-      if(e.target===splash||splash.contains(e.target)){
-        if(e.target.tagName!=='BUTTON'){
-          clearTimeout(autoCloseTimer);
-          closeSplash();
-        }
-      }
-    }
-
-    document.addEventListener('keydown',onKeyDown,false);
-    document.addEventListener('click',onClick,false);
-
-    function cleanup(){
-      document.removeEventListener('keydown',onKeyDown,false);
-      document.removeEventListener('click',onClick,false);
-      clearTimeout(autoCloseTimer)
-    }
-
-    /* Store cleanup for later */
-    splash._splashCleanup=cleanup
+  var el=document.getElementById('splash');if(!el)return;
+  var shown=false;try{shown=sessionStorage.getItem('nts_splash')==='1'}catch(e){}
+  if(shown){el.parentNode.removeChild(el);return}
+  var rm=false;try{rm=window.matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}
+  var who='',h=new Date().getHours(),g=h<5?'Welcome':h<12?'Good morning':h<17?'Good afternoon':h<22?'Good evening':'Welcome';
+  try{var c=JSON.parse(localStorage.getItem('nts_rq_cfg')||'null');if(c&&c.who)who=String(c.who)}catch(e){}
+  try{var lg=localStorage.getItem('nts_logo');if(lg&&/^(data:image\/|https?:\/\/|[\w.\/-]+$)/.test(lg))document.getElementById('spImg').src=lg}catch(e){}
+  var w=document.getElementById('spW'),em=document.createElement('em');w.textContent='';
+  if(who){w.appendChild(document.createTextNode('Welcome,'));w.appendChild(document.createElement('br'));em.textContent=who}else{w.appendChild(document.createTextNode('Welcome to'));w.appendChild(document.createElement('br'));em.textContent='the studio'}
+  w.appendChild(em);
+  var bg=document.getElementById('spBg'),k,f;if(!rm){for(k=0;k<14;k++){f=document.createElement('span');f.className='sp-ff';f.style.left=(6+Math.random()*88)+'%';f.style.bottom=(4+Math.random()*34)+'%';f.style.animationDelay=(Math.random()*8).toFixed(2)+'s';f.style.animationDuration=(7+Math.random()*6).toFixed(1)+'s';bg.appendChild(f)}}
+  el.hidden=false;document.documentElement.style.overflow='hidden';
+  var done=false;
+  function end(){
+    if(done)return;done=true;try{sessionStorage.setItem('nts_splash','1')}catch(e){}
+    el.className='out';document.documentElement.style.overflow='';if(after){var fn=after;setTimeout(function(){try{fn()}catch(e){}},350)}
+    setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el)},800);
+    document.removeEventListener('keydown',end);
   }
-
-  function closeSplash(){
-    var splash=$('splash');
-    if(!splash)return;
-
-    /* Trigger exit animation */
-    splash.classList.add('exit');
-
-    /* Remove from DOM after animation completes */
-    setTimeout(function(){
-      if(splash.parentNode){
-        splash.parentNode.removeChild(splash)
-      }
-      if(splash._splashCleanup){
-        splash._splashCleanup()
-      }
-    },FADE_OUT_DELAY);
-  }
-
-  function removeSplash(){
-    var splash=$('splash');
-    if(splash&&splash.parentNode){
-      splash.parentNode.removeChild(splash)
-    }
-  }
-
-  /* Initialize on DOM ready */
-  if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded',initSplash,false);
-  }else{
-    initSplash();
-  }
-
-  /* Expose for external control if needed */
-  window.closeSplash=closeSplash;
-  window.removeSplash=removeSplash;
+  var after=null;
+  function go2(fn){after=fn;end()}
+  var q=el.querySelectorAll('[data-spgo]'),n;
+  for(n=0;n<q.length;n++){(function(b){b.addEventListener('click',function(e){e.stopPropagation();var pg=b.getAttribute('data-spgo');go2(function(){if(typeof go==='function')go(pg)})})})(q[n])}
+  var g2=document.getElementById('spGo2');if(g2)g2.addEventListener('click',function(e){e.stopPropagation();end()});
+  var gc=document.getElementById('spCn');if(gc)gc.addEventListener('click',function(e){e.stopPropagation();go2(function(){if(typeof rqConnectModal==='function')rqConnectModal()})});
+  el.addEventListener('click',end);document.addEventListener('keydown',end);
+  setTimeout(end,rm?900:4400);
 })();

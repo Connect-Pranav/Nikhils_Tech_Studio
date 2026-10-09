@@ -1,0 +1,5 @@
+DELETE these from the repo (made by the other Claude Code run, they break the top bar):
+  splash-new.css  splash-new.js  topbar-new.css  app-new.js
+REPLACE these with the files from NTS-full.zip (known good, tested):
+  index.html  splash.css  splash.js  icons.css  notify.js  requests.css
+Then wait 2 minutes and hard refresh (Ctrl+Shift+R).

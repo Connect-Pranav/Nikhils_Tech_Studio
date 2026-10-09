@@ -1,6 +1,7 @@
-/* Glass theme v3 (Prism-enhanced): vibrant accents on glass base with enhanced color orbs */
+/* Glass theme v2 (Apple Liquid Glass inspired, calmer): graphite base with soft drifting colour orbs behind frosted panes.
+   Top bar = main sections, left panel = pages of the selected section. Approximation built with CSS only. */
 :root{
-  --bg:#0a0e15;
+  --bg:#0d1218;
   --s1:rgba(255,255,255,.065);--s2:rgba(255,255,255,.1);--s3:rgba(255,255,255,.15);
   --ln:rgba(255,255,255,.13);--ln2:rgba(255,255,255,.26);
   --tx:#eef2f7;--mu:#9eabbc;
@@ -9,8 +10,7 @@
   --gl:blur(24px) saturate(160%);
   --edge:inset 0 1px 0 rgba(255,255,255,.28),inset 0 -1px 0 rgba(255,255,255,.04);
   --ttl:linear-gradient(180deg,#ffffff,#b9c6d8);
-  /* Prism-enhanced orbs: more vibrant, deeper saturation */
-  --o1:rgba(79,143,230,.42);--o2:rgba(0,212,255,.32);--o3:rgba(179,102,255,.28);--o4:rgba(255,107,157,.18);
+  --o1:rgba(88,140,235,.34);--o2:rgba(60,170,160,.26);--o3:rgba(150,120,225,.24);--o4:rgba(235,160,110,.14);
 }
 [data-theme="light"]{
   --bg:#e9eff6;
@@ -24,24 +24,19 @@
   --o1:rgba(110,165,245,.5);--o2:rgba(110,205,195,.42);--o3:rgba(190,170,245,.4);--o4:rgba(250,200,160,.38);
 }
 html,body{background:var(--bg)}
-body{font-family:'Geist',-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Segoe UI',system-ui,sans-serif;background:var(--bg);letter-spacing:-.008em;-webkit-font-smoothing:antialiased}
+body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Geist','Segoe UI',system-ui,sans-serif;background:var(--bg);letter-spacing:-.005em}
 
-/* Enhanced backdrop: richer color orbs with Prism palette */
-body::before,body::after{content:"";position:fixed;z-index:0;pointer-events:none;border-radius:50%;filter:blur(80px)}
-body::before{width:720px;height:720px;left:-100px;top:-150px;background:radial-gradient(circle at 30% 40%,var(--o1),transparent 55%),radial-gradient(circle at 80% 70%,var(--o3),transparent 60%),radial-gradient(circle at 20% 70%,var(--o2),transparent 50%);animation:orbA 30s ease-in-out infinite alternate}
-body::after{width:680px;height:680px;right:-120px;bottom:-160px;background:radial-gradient(circle at 35% 35%,var(--o4),transparent 55%),radial-gradient(circle at 65% 75%,var(--o1),transparent 60%),radial-gradient(circle at 40% 20%,var(--o2),transparent 50%);animation:orbB 36s ease-in-out infinite alternate}
-
+/* backdrop: soft colour orbs drift slowly so the frosted panes visibly blur something */
+body::before,body::after{content:"";position:fixed;z-index:0;pointer-events:none;border-radius:50%;filter:blur(60px)}
+body::before{width:62vw;height:62vw;left:-14vw;top:-18vw;background:radial-gradient(circle at 35% 35%,var(--o1),transparent 65%),radial-gradient(circle at 80% 70%,var(--o3),transparent 60%)}
+body::after{width:58vw;height:58vw;right:-16vw;bottom:-20vw;background:radial-gradient(circle at 40% 40%,var(--o2),transparent 62%),radial-gradient(circle at 75% 20%,var(--o4),transparent 55%)}
 @media (prefers-reduced-motion:no-preference){
-  @keyframes orbA{to{transform:translate(12vw,10vh) scale(1.12)}}
-  @keyframes orbB{to{transform:translate(-10vw,-8vh) scale(1.14)}}
+  body::before{animation:orbA 26s ease-in-out infinite alternate}
+  body::after{animation:orbB 32s ease-in-out infinite alternate}
 }
-
-@media (prefers-reduced-motion:reduce){
-  body::before,body::after{animation:none}
-}
-
-#fx{opacity:.4}
-
+@keyframes orbA{to{transform:translate(9vw,7vh) scale(1.08)}}
+@keyframes orbB{to{transform:translate(-8vw,-6vh) scale(1.1)}}
+#fx{opacity:.35}
 
 /* frosted panes with a sheen and a bright top edge */
 .card,.side,.pal,.mod,.tile,.bc,.col,.bnav,.sheet,.hd .seg1{
