@@ -1,40 +1,274 @@
-/* ---------- welcome hero: dark botanical glow, big headline, glass pills; fades into the app ---------- */
-#splash{position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;background:#050b09;color:#f4f1ea;overflow:hidden;cursor:pointer;font-family:Geist,system-ui,-apple-system,sans-serif;transition:opacity .7s ease,visibility 0s linear .7s;-webkit-tap-highlight-color:transparent;animation:spFail 0s linear 8s forwards}
-#splash[hidden]{display:none}
-#splash.out{opacity:0;visibility:hidden;pointer-events:none}
-@keyframes spFail{to{opacity:0;visibility:hidden;pointer-events:none}}
-.sp-bg{position:absolute;inset:0;pointer-events:none;background:
-  radial-gradient(60% 50% at 18% 108%,rgba(24,92,58,.75),transparent 70%),
-  radial-gradient(55% 48% at 86% 104%,rgba(14,70,56,.8),transparent 70%),
-  radial-gradient(40% 36% at 50% 112%,rgba(214,120,40,.34),transparent 72%),
-  radial-gradient(70% 55% at 50% -10%,rgba(30,64,50,.55),transparent 70%),
-  linear-gradient(180deg,#07110d,#050b09 60%,#04100b)}
-.sp-bg:before,.sp-bg:after{content:"";position:absolute;bottom:-6%;width:46%;height:62%;background:radial-gradient(ellipse at 50% 100%,rgba(8,34,22,.95),rgba(8,34,22,0) 68%);filter:blur(6px);animation:spSway 9s ease-in-out infinite alternate}
-.sp-bg:before{left:-6%;transform-origin:20% 100%}.sp-bg:after{right:-8%;transform-origin:80% 100%;animation-duration:12s;animation-direction:alternate-reverse}
-@keyframes spSway{to{transform:rotate(2.5deg) scale(1.05)}}
-.sp-ff{position:absolute;width:6px;height:6px;border-radius:50%;background:#ffb55a;box-shadow:0 0 14px 4px rgba(255,170,70,.55);opacity:0;pointer-events:none;animation:spFly 9s ease-in-out infinite}
-@keyframes spFly{0%{opacity:0;transform:translate3d(0,10px,0) scale(.6)}20%{opacity:.9}60%{opacity:.6}100%{opacity:0;transform:translate3d(24px,-70px,0) scale(1)}}
-.sp-top{position:relative;display:flex;align-items:center;justify-content:center;padding:max(18px,env(safe-area-inset-top)) 18px 0;opacity:0;animation:spDown .7s ease .2s forwards}
-.sp-nav{display:flex;align-items:center;gap:10px;padding:7px 8px 7px 8px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px)}
-.sp-nav img{width:30px;height:30px;border-radius:50%;object-fit:cover;display:block}
-.sp-nav b{font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;padding-right:12px}
-.sp-m{position:relative;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:18px 22px 36px}
-.sp-tag{display:inline-flex;align-items:center;gap:8px;padding:6px 14px 6px 6px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);font-size:12.5px;color:rgba(244,241,234,.8);opacity:0;animation:spUp .7s ease .5s forwards}
-.sp-tag i{font-style:normal;background:#f4f1ea;color:#07110d;font-weight:700;font-size:11px;padding:3px 9px;border-radius:999px}
-.sp-w{margin:22px 0 0;font-weight:600;font-size:clamp(40px,9.5vw,92px);line-height:1.08;letter-spacing:-.035em;opacity:0;animation:spUp .9s cubic-bezier(.2,.8,.2,1) .7s forwards;text-shadow:0 6px 40px rgba(0,0,0,.45)}
-.sp-w em{display:inline-block;font-style:italic;font-weight:500;padding:0 .06em .12em;background:linear-gradient(100deg,#fff 0%,#ffd9a0 55%,#ffb35c 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
-.sp-s{margin:18px 0 0;max-width:520px;font-size:clamp(14px,2.4vw,17px);line-height:1.55;color:rgba(244,241,234,.72);opacity:0;animation:spUp .8s ease 1s forwards}
-.sp-btns{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap;justify-content:center;opacity:0;animation:spUp .8s ease 1.2s forwards}
-.sp-btn{display:inline-flex;align-items:center;gap:8px;min-height:46px;padding:0 22px;border-radius:999px;font:600 14.5px/1 Geist,system-ui,sans-serif;cursor:pointer;border:1px solid rgba(255,255,255,.2);color:#f4f1ea;background:rgba(255,255,255,.08);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
-.sp-btn.go{background:#f4f1ea;color:#07110d;border-color:#f4f1ea}
-.sp-btn:focus-visible{outline:2px solid #ffd9a0;outline-offset:3px}
-.sp-bar{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.08)}
-.sp-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#2f9a6a,#ffb35c);animation:spBar 3.4s linear 1s forwards}
-@keyframes spUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-@keyframes spDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}
-@keyframes spBar{to{width:100%}}
-#splash.out .sp-m{transform:scale(1.04);transition:transform .7s ease}
-@media (prefers-reduced-motion:reduce){
-  #splash *,#splash{animation-duration:.01s!important;animation-delay:0s!important}
-  .sp-ff,.sp-bg:before,.sp-bg:after{display:none}.sp-bar i{width:100%}
+/* Welcome splash: Prism-inspired hero with layered botanical glow and glass pills
+   Appears once per session, auto-closes after ~4.4s, can skip via tap/key, removes from DOM when done */
+
+#splash{
+  position:fixed;inset:0;z-index:100;
+  background:linear-gradient(180deg,var(--bg) 0%,color-mix(in srgb,var(--bg),var(--o1) 20%) 35%,var(--bg) 100%);
+  display:grid;place-items:center;
+  opacity:1;animation:splashFade .5s ease-out forwards;
+  pointer-events:auto
 }
+
+@keyframes splashFade{from{opacity:0}to{opacity:1}}
+
+#splash.exit{animation:splashExit .4s cubic-bezier(.4,0,1,1) forwards;pointer-events:none}
+@keyframes splashExit{to{opacity:0;transform:translateY(20px)}}
+
+/* Layered botanical glow backdrop: richer, deeper foliage effect */
+#splash::before,#splash::after{
+  content:"";position:absolute;z-index:-1;pointer-events:none;border-radius:50%;filter:blur(80px)
+}
+
+#splash::before{
+  width:680px;height:680px;left:-120px;top:-160px;
+  background:
+    radial-gradient(circle at 30% 40%,rgba(79,143,230,.42) 0%,transparent 55%),
+    radial-gradient(circle at 70% 60%,rgba(150,120,225,.28) 0%,transparent 60%),
+    radial-gradient(circle at 20% 70%,rgba(60,170,160,.32) 0%,transparent 50%);
+  animation:glowDrift1 28s ease-in-out infinite alternate
+}
+
+#splash::after{
+  width:640px;height:640px;right:-140px;bottom:-180px;
+  background:
+    radial-gradient(circle at 35% 35%,rgba(235,160,110,.26) 0%,transparent 55%),
+    radial-gradient(circle at 65% 75%,rgba(79,143,230,.35) 0%,transparent 60%),
+    radial-gradient(circle at 40% 20%,rgba(60,170,160,.28) 0%,transparent 50%);
+  animation:glowDrift2 34s ease-in-out infinite alternate
+}
+
+@media (prefers-reduced-motion:no-preference){
+  @keyframes glowDrift1{to{transform:translate(16vw,12vh) scale(1.12)}}
+  @keyframes glowDrift2{to{transform:translate(-14vw,-10vh) scale(1.14)}}
+}
+
+@media (prefers-reduced-motion:reduce){
+  #splash::before,#splash::after{animation:none}
+}
+
+/* Content container: centered, constrained */
+#splash .splash-content{
+  position:relative;z-index:1;
+  text-align:center;
+  max-width:640px;
+  padding:0 clamp(20px,5vw,60px);
+  animation:contentSlide .6s cubic-bezier(.34,.69,.42,.98) .1s forwards;
+  opacity:0
+}
+
+@keyframes contentSlide{
+  from{opacity:0;transform:translateY(-30px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* Headline: gradient text inspired by glass theme */
+#splash .splash-title{
+  font-size:clamp(28px,6vw,52px);
+  font-weight:700;
+  letter-spacing:-.04em;
+  line-height:1.1;
+  margin:0 0 8px;
+  background:var(--ttl);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+  color:transparent
+}
+
+/* Subtitle/greeting */
+#splash .splash-subtitle{
+  font-size:clamp(13px,2.2vw,16px);
+  color:var(--mu);
+  line-height:1.5;
+  margin:0 0 32px;
+  font-weight:500;
+  letter-spacing:-.01em
+}
+
+/* Pill-style navigation bar: glass + frosted effect */
+.splash-nav{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  margin-bottom:24px;
+  flex-wrap:wrap;
+  animation:navSlide .6s cubic-bezier(.34,.69,.42,.98) .2s forwards;
+  opacity:0
+}
+
+@keyframes navSlide{
+  from{opacity:0;transform:translateY(-16px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* Tag chip: smaller pill in the nav */
+.splash-tag{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  color:var(--act);
+  background:linear-gradient(145deg,rgba(255,255,255,.12),rgba(255,255,255,.04));
+  border:1px solid rgba(255,255,255,.15);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 8px 24px rgba(0,0,0,.2)
+}
+
+[data-theme="light"] .splash-tag{
+  color:var(--ac);
+  background:linear-gradient(145deg,rgba(255,255,255,.8),rgba(255,255,255,.5));
+  border-color:rgba(60,90,130,.15);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,1),0 4px 12px rgba(50,80,120,.08)
+}
+
+/* Button group: primary + secondary */
+.splash-buttons{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  flex-wrap:wrap;
+  animation:buttonsSlide .6s cubic-bezier(.34,.69,.42,.98) .3s forwards;
+  opacity:0;
+  margin-bottom:20px
+}
+
+@keyframes buttonsSlide{
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* Primary button: pill-shaped, gradient, glass layer */
+.splash-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  min-height:48px;
+  padding:0 28px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:600;
+  letter-spacing:-.01em;
+  border:1px solid rgba(255,255,255,.2);
+  color:#fff;
+  background:linear-gradient(180deg,#5b9bf0,#3f7fdb);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 8px 24px rgba(63,127,219,.3);
+  text-decoration:none;
+  cursor:pointer;
+  white-space:nowrap;
+  transition:all .25s ease;
+  outline:0
+}
+
+.splash-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 12px 32px rgba(63,127,219,.4);
+  border-color:rgba(255,255,255,.3)
+}
+
+.splash-btn:active{
+  transform:translateY(0);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 4px 12px rgba(63,127,219,.25)
+}
+
+.splash-btn.secondary{
+  background:rgba(255,255,255,.1);
+  color:var(--tx);
+  border-color:rgba(255,255,255,.12);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.15),0 6px 16px rgba(0,0,0,.15)
+}
+
+.splash-btn.secondary:hover{
+  background:rgba(255,255,255,.15);
+  border-color:rgba(255,255,255,.25);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 8px 20px rgba(0,0,0,.2)
+}
+
+[data-theme="light"] .splash-btn{
+  background:linear-gradient(180deg,#5b9bf0,#3f7fdb);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 8px 20px rgba(63,127,219,.2);
+  color:#fff
+}
+
+[data-theme="light"] .splash-btn.secondary{
+  background:rgba(255,255,255,.8);
+  color:#1d4f9f;
+  border-color:rgba(60,90,130,.15);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,1),0 4px 12px rgba(50,80,120,.1)
+}
+
+[data-theme="light"] .splash-btn.secondary:hover{
+  background:#fff;
+  border-color:rgba(60,90,130,.25);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,1),0 6px 16px rgba(50,80,120,.15)
+}
+
+/* Progress line: subtle entrance progress */
+.splash-progress{
+  height:3px;
+  max-width:200px;
+  margin:20px auto 0;
+  background:rgba(255,255,255,.1);
+  border-radius:2px;
+  overflow:hidden;
+  animation:progressSlide .6s cubic-bezier(.34,.69,.42,.98) .4s forwards;
+  opacity:0
+}
+
+@keyframes progressSlide{
+  from{opacity:0;transform:scaleX(0);transform-origin:left}
+  to{opacity:1;transform:scaleX(1);transform-origin:left}
+}
+
+.splash-progress i{
+  display:block;
+  height:100%;
+  width:0;
+  background:linear-gradient(90deg,var(--act),#74d9c6);
+  border-radius:2px;
+  animation:progressFill 4.2s ease-in forwards
+}
+
+@keyframes progressFill{to{width:100%}}
+
+/* Keyboard hint and close instructions */
+.splash-hint{
+  font-size:11px;
+  color:var(--mu);
+  margin-top:28px;
+  opacity:0;
+  animation:hintFade .6s ease-out .5s forwards;
+  letter-spacing:.03em
+}
+
+@keyframes hintFade{from{opacity:0}to{opacity:.7}}
+
+/* Responsive: stack on mobile, adjust spacing */
+@media (max-width:520px){
+  #splash .splash-title{font-size:clamp(24px,5vw,40px)}
+
+  .splash-buttons{
+    flex-direction:column;
+    width:100%;
+    gap:10px
+  }
+
+  .splash-btn{
+    width:100%;
+    min-height:46px;
+    font-size:12px
+  }
+
+  .splash-progress{max-width:160px}
+
+  .splash-hint{font-size:10px}
+}
+
+/* Ensure no layout shift when splash exits */
+#splash.exit ~*{pointer-events:auto}
